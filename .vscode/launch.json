@@ -3,6 +3,13 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "type": "java",
+      "name": "PenisStarLeagueApplication",
+      "request": "launch",
+      "mainClass": "com.psl.PenisStarLeague.PenisStarLeagueApplication",
+      "projectName": "PenisStarLeague"
+    },
+    {
       "name": "ng serve",
       "type": "chrome",
       "request": "launch",

@@ -1,0 +1,13 @@
+<div style=" height: 400px; width: 400px;justify-content: space-between; display: flex; flex-direction: column; align-items: center;">
+    <h1 style="color: #fff;">
+        Create User Name
+    </h1>
+    <div>
+        <label for="userName">User Name: </label>
+        <input id="userName" [(ngModel)] = "userName">
+    </div>
+    <button (click)="onCreate()" [disabled]="userName.length<3">
+        Create
+    </button>
+
+</div>

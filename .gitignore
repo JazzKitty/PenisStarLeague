@@ -36,7 +36,13 @@ yarn-error.log
 /libpeerconnection.log
 testem.log
 /typings
+PenisStarLeague-ng/node_modules/
+PenisStarLeague-ng/.angular/cache
+/target
 
 # System files
 .DS_Store
 Thumbs.db
+
+#private 
+.env

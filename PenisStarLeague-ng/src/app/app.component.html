@@ -1,0 +1,67 @@
+<main style="height: 100%; width: 100%">
+    <header class="brand-name">
+        <mat-toolbar style="background: midnightblue; color: white; width: 100%; border: none">
+            <mat-toolbar-row style="display: flex; width: 100%;">
+                <button style="width: 40px; height: 40px;
+          font-size: large;
+          border: none;
+          color: transparent;
+          background-color: transparent;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          cursor: pointer;" type="button" aria-label="Toggle sidenav" (click)="onBarsClicked()">
+                    <fa-icon style="color:white;" [icon]="faBars"></fa-icon>
+                </button>
+                <h1 style="font-family: 'Source Code Pro'; margin-left: 0px;">
+                    Penis Star League
+                </h1>
+                <div *ngIf="!userName; else loggedIn" style="margin-left: auto; display: flex;">
+                    <h2 >
+                        Login In
+                    </h2>
+                    <button style="width: 40px; height: 40px;
+                font-size: large;
+                border: none;
+                color: transparent;
+                background-color: transparent;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                cursor: pointer;" type="button" aria-label="Toggle sidenav" class="button" (click)="onLogin()">
+
+                        <fa-icon style="color:white;" [icon]="faSignIn"></fa-icon>
+                    </button>
+                </div>
+                <ng-template #loggedIn>
+                    <h2 style="margin-left: auto;">
+                        {{userName}}
+                    </h2>
+                </ng-template>
+            </mat-toolbar-row>
+        </mat-toolbar>
+    </header>
+    <section class="content" style="height: inherit;">
+        <mat-drawer-container style="height: 100%;">
+            <mat-drawer mode="side" [opened]="isSidebarOpen">
+                <mat-nav-list>
+                    <mat-list-item routerLink="tournaments">
+                        Tournaments
+                    </mat-list-item>
+                    <mat-list-item routerLink="events">
+                        Events
+                    </mat-list-item>
+                    <mat-list-item routerLink="leagues">
+                        Leagues
+                    </mat-list-item>
+                    <mat-list-item routerLink="games">
+                        Games
+                    </mat-list-item>
+                </mat-nav-list>
+            </mat-drawer>
+            <mat-drawer-content>
+                <router-outlet></router-outlet>
+            </mat-drawer-content>
+        </mat-drawer-container>
+    </section>
+</main>
