@@ -1,18 +1,80 @@
 @use '@angular/material' as mat;
 
-$theme: mat.define-theme((
+@include mat.core();
+
+$primary-accent: #7EB900;
+$secondary-accent: #606060; 
+
+$my-app-theme: mat.define-dark-theme((
   color: (
-    theme-type: dark,
-    primary: mat.$violet-palette,
+    primary: $primary-accent,
+    accent: $secondary-accent,
   ),
-  typography: (
-    brand-family: 'Comic Sans',
-    bold-weight: 900
-  ),
-  density: (
-    scale: -1
-  )
 ));
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+@include mat.all-component-themes($my-app-theme);
+
+html, body { height: 100%; overflow-y: hidden;
+
+}
+body { margin: 0; font-family: Source Code Pro, "Source Code Pro", sans-serif;
+
+
+}
+
+
+
+html label
+{
+    font-family: Source Code Pro; 
+}
+
+.green-color{
+    background-color: $primary-accent !important;
+}
+button{
+    color: white !important;
+}
+h1, h2 {
+    font-family: Source Code Pro !important;
+    color: white !important;
+}
+
+
+.dialog{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+.button-primary{
+    background-color: $primary-accent !important;
+}
+.button-secondary{
+    background-color: $secondary-accent !important;
+}
+
+.dialog-header{
+    align-self: flex-start;
+}
+
+.dialog-body{
+    align-self: flex-start;
+}
+
+.dialog-footer{
+    align-self: flex-end;
+    gap: 10px;
+    display: flex;
+}
+
+
+
+
+// ::ng-deep {
+//   .mat-form-field .mat-form-field-flex{
+//     background-color: white !important;
+//   }
+// }
+
