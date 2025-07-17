@@ -1,0 +1,9 @@
+.column{
+    width: inherit; 
+    padding: 10px; 
+}
+:host{
+    height: fit-content;
+    width: inherit;
+    display: inherit;
+}

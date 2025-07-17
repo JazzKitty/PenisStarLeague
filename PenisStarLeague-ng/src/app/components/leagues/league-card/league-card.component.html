@@ -1,15 +1,13 @@
-<mat-card class="league-card" appearance="outlined">
-  <mat-card-header>
-    <mat-card-title>League Name</mat-card-title>
+<mat-card class="league-card" appearance="outlined" (click)="onCLick.emit(leagueCard?.idLeague)">
+  <mat-card-header
+    style="display: flex; justify-content: space-between; align-items: center"
+  >
+    <mat-card-title>{{ leagueCard?.league }}</mat-card-title>
+    <fa-icon *ngIf="icon" style="color: white" [icon]="icon"></fa-icon>
   </mat-card-header>
   <mat-card-content>
-    <p>Test</p>
+    <div>Owner: {{ leagueCard?.owner }}</div>
+    <div>Member Count: {{ leagueCard?.userCount }}</div>
   </mat-card-content>
-  <mat-card-footer class="example-card-footer">
-    <mat-chip-set aria-label="league info">
-      <mat-chip>charming</mat-chip>
-      <mat-chip>graceful</mat-chip>
-      <mat-chip>sassy</mat-chip>
-    </mat-chip-set>
-  </mat-card-footer>
+  <mat-card-footer class="example-card-footer"> </mat-card-footer>
 </mat-card>

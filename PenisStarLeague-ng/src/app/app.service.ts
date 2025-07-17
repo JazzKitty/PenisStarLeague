@@ -5,20 +5,29 @@ import { OAuthService } from 'angular-oauth2-oidc';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { UserDTO } from './dto/UserDTO';
 import { CreateUserDTO } from './dto/CreateUserDTO';
+import { LeagueType } from './model/LeagueType';
+import { Game } from './model/Game';
+import { Month } from './model/Month';
+import { Week } from './model/Week'
+import { EventIntervalType } from './model/EventIntervalType';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AppService {
-    private url: string;
+    public url: string;
 
     public tokenSub: BehaviorSubject<string> = new BehaviorSubject<string>("");
     public googleAuthUrl: BehaviorSubject<string> = new BehaviorSubject<string>("");
     public userSub: BehaviorSubject<UserDTO> = new BehaviorSubject<UserDTO>(new UserDTO());
+    public leagueTypeSub: BehaviorSubject<LeagueType[]> = new BehaviorSubject<LeagueType[]>([]);
+    public gameSub: BehaviorSubject<Game[]> = new BehaviorSubject<Game[]>([]);
+    public monthSub: BehaviorSubject<Month[]> = new BehaviorSubject<Month[]>([]);
+    public weekSub: BehaviorSubject<Week[]> = new BehaviorSubject<Week[]>([]);
+    public eventIntervalTypeSub: BehaviorSubject<EventIntervalType[]> = new BehaviorSubject<EventIntervalType[]>([]);
 
     constructor(private http: HttpClient, private router: Router, private oauthService: OAuthService) {
         this.url = 'http://localhost:8080/';
-
     }
 
     getAuthUrl(): void {
@@ -26,8 +35,6 @@ export class AppService {
             this.googleAuthUrl.next(data.url);
         });
     }
-
-
 
     getToken(code: string): void {
         this.http.get<any>(this.url + "auth/callback?code=" + code).subscribe(res => {
@@ -44,8 +51,7 @@ export class AppService {
         })
     }
 
-
-    createUserName(userName: string) {
+    createUserName(userName: string): Observable<CreateUserDTO> | undefined {
         let idUser =  this.userSub.value.idUser; 
         if(idUser == null){
             return;
@@ -56,4 +62,34 @@ export class AppService {
         return this.http.get<CreateUserDTO>(this.url + "createUserName", { headers: headers, params: params});
     }
 
+    getLeagueTypes(): void{
+        this.http.get<LeagueType[]>(this.url + "public/getLeagueTypes" ).subscribe(res => {
+            this.leagueTypeSub.next(res)
+        })
+    }
+
+    getGames(): void{
+        this.http.get<Game[]>(this.url + "public/getGames" ).subscribe(res => {
+            this.gameSub.next(res)
+        })
+    }
+
+    
+    getMonthes(): void{
+        this.http.get<Month[]>(this.url + "public/getMonthes" ).subscribe(res => {
+            this.monthSub.next(res)
+        })
+    }
+
+    getWeeks(): void{
+        this.http.get<Week[]>(this.url + "public/getWeeks" ).subscribe(res => {
+            this.weekSub.next(res)
+        })
+    }
+
+    getEventIntervalTypes(): void{
+        this.http.get<EventIntervalType[]>(this.url + "public/getEventIntervalTypes" ).subscribe(res => {
+            this.eventIntervalTypeSub.next(res);
+        })
+    }
 }

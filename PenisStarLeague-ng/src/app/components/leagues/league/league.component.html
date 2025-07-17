@@ -1,0 +1,51 @@
+<div style="width: 100%" *ngIf="authorized != undefined">
+    <div *ngIf="authorized; else notAuth">
+        <div *ngIf="league?.isOwner==='Y'" style="display: flex; justify-content: flex-end; padding: 10px;">
+            <button (click)="deleteLeague()" mat-button
+                style="width: 40px; height: 40px; align-self: flex-end; background: red; ">
+                <fa-icon style="color: white" [icon]="faTrash">
+                </fa-icon>
+            </button>
+        </div>
+
+        <div style="justify-content: space-evenly; display: flex; flex-direction: row; width: 100%;">
+            <div class="column">
+                <div style="display: flex; justify-content: space-between;">
+                    <div>
+                        <h1>Title: {{league?.league}}</h1>
+                    </div>
+                    <button *ngIf="league?.isOwner==='Y'" (click)="editTitle()" mat-button
+                        style="width: 40px; height: 40px;">
+                        <fa-icon style="color: white" [icon]="faPencil">
+                        </fa-icon>
+                    </button>
+                </div>
+
+                <h2>Owner: {{league?.owner}}</h2>
+                <h3>Member Count: {{league?.memberCount}}</h3>
+                <div style="display: flex; justify-content: space-between;">
+                    <p>{{league?.description}}</p>
+                    <button *ngIf="league?.isOwner==='Y'" (click)="editDescription()" mat-button
+                        style="width: 40px; height: 40px;">
+                        <fa-icon style="color: white" [icon]="faPencil">
+                        </fa-icon>
+                    </button>
+                </div>
+
+            </div>
+            <div class="column">
+                <ag-grid-angular [columnDefs]="memberColDef" style="width: inherit; height: 500px;" [theme]="theme"
+                    [rowData]="league?.users">
+                </ag-grid-angular>
+            </div>
+            <div class="column">
+                <ag-grid-angular [columnDefs]="memberColDef" style="width: inherit; height: 500px;" [theme]="theme"
+                    [rowData]="league?.events">
+                </ag-grid-angular>
+            </div>
+        </div>
+    </div>
+    <ng-template #notAuth style="justify-content: center; align-items: center; display: flex">
+        No Auth
+    </ng-template>
+</div>

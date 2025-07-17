@@ -19,6 +19,8 @@ import org.springframework.beans.factory.annotation.Value;
 import com.psl.PenisStarLeague.dto.TokenDTO;
 import com.psl.PenisStarLeague.dto.UrlDTO;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequiredArgsConstructor
 public class AuthController {

@@ -2,5 +2,7 @@
     "java.configuration.updateBuildConfiguration": "interactive",
     "git.ignoreLimitWarning": true,
        "editor.tabSize": 4,
-          "editor.detectIndentation": false
+        "editor.detectIndentation": false,
+        "java.debug.settings.onBuildFailureProceed": true,
+        "java.compile.nullAnalysis.mode": "automatic"
 }

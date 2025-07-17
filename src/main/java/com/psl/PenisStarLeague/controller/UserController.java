@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.psl.PenisStarLeague.dto.MessageDTO;
 import com.psl.PenisStarLeague.dto.UserDTO;
-import com.psl.PenisStarLeague.model.User;
+import com.psl.PenisStarLeague.model.PSLUser;
 import com.psl.PenisStarLeague.service.UserService;
 import lombok.RequiredArgsConstructor;
 
@@ -24,21 +24,24 @@ public class UserController {
     
         OAuth2IntrospectionAuthenticatedPrincipal prince = (OAuth2IntrospectionAuthenticatedPrincipal) authentication.getPrincipal();
     
-        User user = userService.getUser(prince.getAttribute("email"), prince.getAttribute("sub"), prince.getAttribute("name"));
+        PSLUser user = userService.getUser(prince.getAttribute("email"), prince.getAttribute("sub"), prince.getAttribute("name"));
         
+        prince.getAttributes(); 
         UserDTO userDTO = new UserDTO(user.getIdUser(), user.getName(), user.getUserName()); 
         
         return ResponseEntity.ok(userDTO);
     }
 
     @GetMapping("/createUserName")
-    public ResponseEntity<MessageDTO> createUserName(@RequestParam String userName, @RequestParam int idUser) {
+    public ResponseEntity<MessageDTO> createUserName(Authentication authentication, @RequestParam String userName) {
 
         if(userName == null || userName.length() < 3){
             return ResponseEntity.ok(new MessageDTO("User name is too short: ", "N"));
         }
-        
-        boolean isAvailable = userService.createUserName(userName, idUser);
+
+        OAuth2IntrospectionAuthenticatedPrincipal prince = (OAuth2IntrospectionAuthenticatedPrincipal) authentication.getPrincipal();
+
+        boolean isAvailable = userService.createUserName(userName, prince.getAttribute("email"));
         if(isAvailable){
             return ResponseEntity.ok(new MessageDTO("", "Y"));
         }

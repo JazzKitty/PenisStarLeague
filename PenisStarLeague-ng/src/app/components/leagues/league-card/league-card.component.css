@@ -1,4 +1,9 @@
 .league-card{
     width: 400px;
     margin: 5px;
+    transition: filter 0.3s ease; /* Adds a smooth transition effect */
+}
+
+.league-card:hover {
+  filter: brightness(1.2); /* Increases brightness by 20% on hover */
 }

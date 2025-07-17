@@ -36,7 +36,22 @@ import { MatChipsModule } from '@angular/material/chips';
 import { NewLeagueDialogComponent } from './components/leagues/new-league-dialog/new-league-dialog.component';
 import { MatButtonModule } from '@angular/material/button';
 import {MatInputModule} from '@angular/material/input'; 
-import {MatFormFieldModule} from '@angular/material/form-field'; 
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatDatepickerModule} from '@angular/material/datepicker'; 
+import { MatOption } from "@angular/material/core"; 
+import { MatSelectModule} from '@angular/material/select';
+import { LeagueComponent } from './components/leagues/league/league.component';
+import { AgGridAngular } from 'ag-grid-angular'; // Angular Data Grid Component
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+import { ComfirmationDialogComponent } from './components/shared/comfirmation-dialog.component/comfirmation-dialog.component';
+import { EditInputDialogComponent } from './components/shared/edit-input-dialog.component/edit-input-dialog.component';
+import { EditTextareaDialogComponent } from './components/shared/edit-textarea-dialog.component/edit-textarea-dialog.component';
+import { NewEventComponent } from './components/events/new-event-component/new-event-component';
+import { provideNativeDateAdapter } from '@angular/material/core';
+import { AutocompleteComponent } from './components/shared/autocomplete-component/autocomplete-component';
+
+// Register all Community features
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 @NgModule({
   declarations: [
@@ -50,6 +65,12 @@ import {MatFormFieldModule} from '@angular/material/form-field';
     LoginDialogComponent,
     LeagueCardComponent,
     NewLeagueDialogComponent,
+    LeagueComponent,
+    ComfirmationDialogComponent,
+    EditInputDialogComponent,
+    EditTextareaDialogComponent,
+    NewEventComponent,
+    AutocompleteComponent,
   ],
   imports: [
     BrowserModule,
@@ -74,12 +95,17 @@ import {MatFormFieldModule} from '@angular/material/form-field';
     MatChipsModule,
     MatButtonModule,
     MatInputModule,
-    MatFormFieldModule
-  ],
+    MatFormFieldModule,
+    MatOption,
+    MatSelectModule,
+    AgGridAngular,
+    MatDatepickerModule
+],
   providers: [
     provideAnimationsAsync(),
     provideHttpClient(),
     provideOAuthClient(),
+    provideNativeDateAdapter()
   ],
   bootstrap: [AppComponent],
 })

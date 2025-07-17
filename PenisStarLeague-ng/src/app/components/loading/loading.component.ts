@@ -19,7 +19,6 @@ export class LoadingComponent {
         this.route.queryParams.subscribe(params => {
             if (params["code"] !== undefined) {
                 this.appService.getToken(params["code"]);
-                //this.router.navigate(['/home'])
             }
         });
 

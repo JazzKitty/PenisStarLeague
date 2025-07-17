@@ -1,0 +1,27 @@
+<div class="dialog" tabindex="-1" role="dialog">
+    <h2 class="dialog-header">{{title}}</h2>
+   
+    <mat-form-field style="width: inherit">
+      <mat-label>Description</mat-label>
+      <textarea
+        [(ngModel)] ="value"
+        matInput
+        maxlength="200"
+        cdkTextareaAutosize
+        #autosize="cdkTextareaAutosize"
+        cdkAutosizeMinRows="5"
+        cdkAutosizeMaxRows="100"
+      ></textarea>
+    </mat-form-field>
+    <div class="dialog-footer">
+    <button
+      mat-button
+      class="button-primary"
+      (click)="onConfirm()">
+      Confirm
+    </button>
+    <button mat-button class="button-secondary" (click)="onClose()">
+      Dismiss
+    </button>
+  </div>
+</div>

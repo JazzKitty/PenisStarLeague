@@ -1,23 +1,26 @@
 package com.psl.PenisStarLeague.service;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.oauth2.server.resource.introspection.OAuth2IntrospectionAuthenticatedPrincipal;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import com.psl.PenisStarLeague.model.User;
+import com.psl.PenisStarLeague.model.PSLUser;
 import com.psl.PenisStarLeague.repo.UserRepository;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class UserService {
+public class UserService   {
     private final UserRepository userRepository;
 
-    public User getUser(String email, String sub, String name){
-        User user = userRepository.findByEmail(email).orElse(null);
+    public PSLUser getUser(String email, String sub, String name){
+        PSLUser user = userRepository.findByEmail(email).orElse(null);
 
         if(user == null){
-                user = new User();
+                user = new PSLUser();
                 user.setName(name);
                 user.setEmail(email);
                 user.setSub(sub);
@@ -26,13 +29,22 @@ public class UserService {
         return user;    
     }
 
+    public int getIdUser(Authentication authentication){
+        OAuth2IntrospectionAuthenticatedPrincipal prince = (OAuth2IntrospectionAuthenticatedPrincipal) authentication.getPrincipal();
+
+        PSLUser user = userRepository.findByEmail(prince.getAttribute("email")).orElse(null);
+        if(user == null){
+            throw new UsernameNotFoundException("no user found with this email address: ");
+        }
+        return user.getIdUser(); 
+    }
 
     /** 
      * return true if user name was able to be created for user
      */
-    public boolean createUserName(String userName, int idUser){
+    public boolean createUserName(String userName, String email){
         if(userRepository.findByUserName(userName).orElse(null) == null){
-            User user = userRepository.findById(idUser).orElse(null); 
+            PSLUser user = userRepository.findByEmail(email).orElse(null); 
             if(user == null){
                 return false;
             }   

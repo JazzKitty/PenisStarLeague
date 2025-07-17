@@ -1,19 +1,17 @@
 package com.psl.PenisStarLeague.model;
 
 import jakarta.persistence.*; // Or javax.persistence.* for older versions
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.Data;
+import lombok.Setter;
+import lombok.Getter;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name="PSLUser")
 /**
  * User object 
  */
-public class User {
+public class PSLUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idUser")

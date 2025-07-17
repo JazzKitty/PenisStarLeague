@@ -26,13 +26,13 @@ export class AppComponent {
 
 
         this.route.queryParams.subscribe(params => {
-                if (params["code"] !== undefined) {
-                    const navigateToNewWithUser: NavigationExtras = {
-                        queryParams: {'code': params["code"]}
-                    };
-                    this.router.navigate(['/loading'], navigateToNewWithUser)
-                }
-            });
+            if (params["code"] !== undefined) {
+                const navigateToNewWithUser: NavigationExtras = {
+                    queryParams: {'code': params["code"]}
+                };
+                this.router.navigate(['/loading'], navigateToNewWithUser)
+            }
+        });
     }
 
     onBarsClicked() {
@@ -43,15 +43,25 @@ export class AppComponent {
     ngOnInit(): void {
         this.appService.userSub.subscribe(res =>{
             if(res.userName !== ""){
-                this.userName = res.userName
+                this.userName = res.userName;
             }
         })
-
+        this.loadDictionaries(); 
     }
 
     onLogin(){
-
         window.location.href = this.authURL; 
+    }
+
+    /**
+     * Load dictionary values 
+     */
+    loadDictionaries(){
+        this.appService.getLeagueTypes();
+        this.appService.getGames(); // I guess this is a dictionary now... maybe need to refactor some names eventually 
+        this.appService.getMonthes();
+        this.appService.getWeeks();
+        this.appService.getEventIntervalTypes();
     }
 
 }
