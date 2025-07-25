@@ -1,15 +1,29 @@
-
-<mat-form-field>
+<mat-form-field *ngIf="valuesCopy">
     <mat-label>{{title}}</mat-label>
-    <mat-select [(value)]="value" (selectionChange)="onValueChange()">
-            <mat-form-field style="width: inherit;">
-                    <input matInput [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange()"       
-                        (click)="$event.stopPropagation()"
-                        (keydown)="$event.stopPropagation()">
-                    <fa-icon matSuffix style="color: white; padding: 20px !important;" [icon]="faMagGlassIcon"></fa-icon>
-            </mat-form-field>
-        <mat-option *ngFor="let val of valuesCopy" [value]="val[id]">{{
-            val[display]
-            }}</mat-option>
+    <mat-select [(value)]="value" (selectionChange)="onValueChange($event)" [multiple]="isMultiSelect"
+        panelClass="autoCompletePanelClass">
+        <mat-select-trigger style="text-wrap: wrap;">
+            <ng-container *ngIf="isMultiSelect; else singleSelect">
+                <mat-chip *ngFor="let chip of value">
+                    {{valueMap.get(chip)}}
+                </mat-chip>
+            </ng-container>
+
+            <ng-template  #singleSelect>
+                <div *ngIf="value">
+                    {{valueMap.get(value)}}
+                </div>
+            </ng-template>
+        </mat-select-trigger>
+        <mat-form-field style="width: inherit;">
+            <input matInput [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange()"
+                (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
+            <fa-icon matSuffix style="color: white; padding: 20px !important;" [icon]="faMagGlassIcon"></fa-icon>
+        </mat-form-field>
+        <div style="overflow: auto;">
+            <mat-option *ngFor="let val of valuesCopy" [value]="val[id]">
+                {{val[display]}}
+            </mat-option>
+        </div>
     </mat-select>
 </mat-form-field>

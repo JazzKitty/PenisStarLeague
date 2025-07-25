@@ -56,21 +56,21 @@
                 </app-autocomplete-component>
             </div>
 
-            <mat-form-field *ngIf="event.isReaccuring === 'N' || event.idEventIntervalType === 1" appearance="fill">
+            <mat-form-field *ngIf="event.isReaccuring === 'N'" appearance="fill">
                 <mat-label>Choose a date</mat-label>
-                <input matInput [matDatepicker]="picker">
+                <input matInput [matDatepicker]="picker" [(ngModel)] = "date" (ngModelChange)="onDateChange()">
                 <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
-            <app-autocomplete-component *ngIf="event.idEventIntervalType === 2 && event.isReaccuring === 'Y'"
-                [valueSub]='monthDictSub' id='idMonth' display='month' [(value)]="event.idMonth" title="Select a Month">
-            </app-autocomplete-component>
 
-            <!--TODO: // account fo the month selected-->
-            <mat-form-field appearance="fill" *ngIf="event.idEventIntervalType === 2 && event.isReaccuring === 'Y'">
+            <mat-form-field appearance="fill" *ngIf="(event.idEventIntervalType === 2 || event.idEventIntervalType === 1) && event.isReaccuring === 'Y'">
                 <mat-label>Day</mat-label>
                 <input matInput type="number" min="0" max="31" [(ngModel)]="event.day" name="eventname" />
             </mat-form-field>
+
+            <app-autocomplete-component *ngIf="event.idEventIntervalType === 1 && event.isReaccuring === 'Y'"
+                [valueSub]='monthDictSub' id='idMonth' display='month' [(value)]="event.idWeek" title="Select Month">
+            </app-autocomplete-component>
 
             <app-autocomplete-component *ngIf="event.idEventIntervalType === 3 && event.isReaccuring === 'Y'"
                 [valueSub]='weekDictSub' id='idWeek' display='weekDay' [(value)]="event.idWeek" title="Select Weekday">
@@ -94,7 +94,7 @@
 
             <mat-form-field>
                 <mat-label>AM or PM</mat-label>
-                <mat-select [(value)]="event.isReaccuring">
+                <mat-select [(value)]="event.amPm">
                     <mat-option *ngFor="let amPm of amPmDict" [value]="amPm.value">{{
                         amPm.display
                         }}</mat-option>
@@ -105,7 +105,7 @@
     </div>
     <div class="dialog-footer">
         <button mat-button class="button-primary" [disabled]="isSavingDisabled()" (click)="saveEvent()">
-            Save League
+            Save Event
         </button>
         <button mat-button class="button-secondary" (click)="onClose()">
             Close

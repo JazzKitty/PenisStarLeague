@@ -1,67 +1,52 @@
 <div class="dialog" tabindex="-1" role="dialog">
-  <h2 class="dialog-header">Add New League</h2>
-  <div
-    style="
+    <h2 class="dialog-header">Add New League</h2>
+    <div style="
       align-self: flex-start;
       height: inherit;
       width: inherit;
       gap: 10px;
       display: flex;
       flex-direction: column;
-    "
-  >
-    <div
-      style="
+    ">
+        <div style="
         align-self: flex-start;
         height: inherit;
         width: inherit;
         gap: 10px;
         display: flex;
-      "
-    >
-      <mat-form-field appearance="fill">
-        <mat-label>League Name</mat-label>
-        <input
-          matInput
-          placeholder="Ex. Vagina Star League"
-          [(ngModel)]="leagueName"
-          name="leagueName"
-        />
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Choose an option</mat-label>
-        <mat-select [(value)]="selectedType">
-          <mat-option *ngFor="let type of types" [value]="type.idLeagueType">{{
-            type.name
-          }}</mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
+      ">
+            <mat-form-field appearance="fill">
+                <mat-label>League Name</mat-label>
+                <input matInput placeholder="Ex. Vagina Star League" [(ngModel)]="createLeagueDTO.league" name="leagueName" />
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Choose an option</mat-label>
+                <mat-select [(value)]="createLeagueDTO.idLeagueType">
+                    <mat-option *ngFor="let type of types" [value]="type.idLeagueType">{{
+                        type.name
+                        }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
 
-    <mat-form-field style="width: inherit">
-      <mat-label>Description</mat-label>
-      <textarea
-        [(ngModel)] ="description"
-        matInput
-        maxlength="200"
-        cdkTextareaAutosize
-        #autosize="cdkTextareaAutosize"
-        cdkAutosizeMinRows="5"
-        cdkAutosizeMaxRows="100"
-      ></textarea>
-    </mat-form-field>
-  </div>
-  <div class="dialog-footer">
-    <button
-      mat-button
-      class="button-primary"
-      [disabled]="isSavingDisabled()"
-      (click)="saveLeague()"
-    >
-      Save League
-    </button>
-    <button mat-button class="button-secondary" (click)="onClose()">
-      Close
-    </button>
-  </div>
+        <mat-form-field style="width: inherit">
+            <mat-label>Description</mat-label>
+            <textarea [(ngModel)]="createLeagueDTO.description" matInput maxlength="200" cdkTextareaAutosize
+                #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="5" cdkAutosizeMaxRows="100"></textarea>
+        </mat-form-field>
+        <h2>
+            Primary Games
+        </h2>
+            <app-autocomplete-component [valueSub]='gameDictSub' id='idGame' display='game' [(value)]="createLeagueDTO.idGames" [isMultiSelect]="true">
+                title="Select a Game">
+            </app-autocomplete-component>
+    </div>
+    <div class="dialog-footer">
+        <button mat-button class="button-primary" [disabled]="isSavingDisabled()" (click)="saveLeague()">
+            Save League
+        </button>
+        <button mat-button class="button-secondary" (click)="onClose()">
+            Close
+        </button>
+    </div>
 </div>

@@ -26,13 +26,13 @@ public class Event {
     @Column(name = "idEvent")
     private int idEvent;
     private String event; // name of event 
-    private Date startDate; 
-    private Date endDate; 
+    private String description; 
     private String isReaccuring; 
-    private Integer reaccuringInterval; 
     private Integer minute;
     private Integer hour;
     private Integer day;
+    private Integer year; 
+    private String amPm; 
 
     @ManyToOne
     @JoinColumn(name = "idLeague", nullable = false)
@@ -43,7 +43,7 @@ public class Event {
     private Game game; 
 
     @ManyToOne
-    @JoinColumn(name = "idEventInterval", nullable = true)
+    @JoinColumn(name = "idEventIntervalType", nullable = true)
     private EventIntervalType eventIntervalType; 
 
     @ManyToOne

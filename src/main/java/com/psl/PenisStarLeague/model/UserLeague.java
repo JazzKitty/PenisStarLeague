@@ -1,6 +1,6 @@
 package com.psl.PenisStarLeague.model;
 
-import java.sql.Date;
+import java.util.Date;
 
 import com.psl.PenisStarLeague.model.dictionary.LeaguePosition;
 

@@ -5,11 +5,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.psl.PenisStarLeague.model.dictionary.LeagueType;
 
 import jakarta.persistence.*; // Or javax.persistence.* for older versions
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.Getter;
 
@@ -24,7 +22,6 @@ public class League {
     private int idLeague; 
     private String league;
     private String description; 
-    private int idLeagueType;
 
     @OneToMany(mappedBy = "league", cascade = CascadeType.ALL)
     private List<UserLeague> userLeagues;
@@ -47,4 +44,19 @@ public class League {
         this.events.add(event);
         event.setLeague(this);
     }
+
+    public void addNewGameLeague(GameLeague gameLeague){
+        if(this.gameLeagues == null){
+            this.gameLeagues = new HashSet<>(); 
+        }
+        this.gameLeagues.add(gameLeague);
+        gameLeague.setLeague(this);
+    }
+
+    @OneToMany(mappedBy = "league", cascade = CascadeType.ALL)
+    private Set<GameLeague> gameLeagues;
+
+    @ManyToOne
+    @JoinColumn(name = "idLeagueType", nullable = false)
+    private LeagueType leagueType;
 }

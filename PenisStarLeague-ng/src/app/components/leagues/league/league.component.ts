@@ -8,6 +8,9 @@ import { ComfirmationDialogComponent } from '../../shared/comfirmation-dialog.co
 import { MatDialog } from '@angular/material/dialog';
 import { EditInputDialogComponent } from '../../shared/edit-input-dialog.component/edit-input-dialog.component';
 import { EditTextareaDialogComponent } from '../../shared/edit-textarea-dialog.component/edit-textarea-dialog.component';
+import { AppService } from '../../../app.service';
+import { BehaviorSubject } from 'rxjs';
+import { Game } from '../../../model/Game';
 
 @Component({
     selector: 'app-league',
@@ -16,9 +19,10 @@ import { EditTextareaDialogComponent } from '../../shared/edit-textarea-dialog.c
     styleUrl: './league.component.css',
 })
 export class LeagueComponent {
-    public authorized: boolean | undefined;
     public league: LeagueDTO | undefined;
     public memberColDef: ColDef[] | undefined;
+
+    public gridOptions: any; 
     protected readonly faPencil = faPencil;
     protected readonly faTrash = faTrash;
 
@@ -37,11 +41,12 @@ export class LeagueComponent {
         private route: ActivatedRoute,
         private dialogRef: MatDialog,
         private router: Router
-    ) { }
+        ) { 
+
+    }
 
     ngOnInit() {
         this.route.queryParams.subscribe((params) => {
-            console.log(params['idLeague']);
             if (params['idLeague'] !== undefined) {
                 this.leagueService.getLeague(params['idLeague']);
             }
@@ -49,12 +54,8 @@ export class LeagueComponent {
         this.leagueService.leagueSub.subscribe(
             (data) => {
                 if (data) {
-                    this.authorized = true;
                     this.league = data;
                 }
-            },
-            (error) => {
-                this.authorized = false;
             }
         );
 
@@ -63,10 +64,15 @@ export class LeagueComponent {
 
     setUpColDef() {
         this.memberColDef = [
-            { field: 'userName' },
-            { field: 'gamerTag' },
-            { field: 'joinDate' },
+            { field: 'userName', flex: 1},
+            { field: 'gamerTag', flex: 1 },
+            { field: 'joinDate', flex: 1 },
+            { field: 'bio', flex: 3},
         ];
+
+        this.gridOptions = {
+
+        }
     }
 
     deleteLeague() {
@@ -88,6 +94,11 @@ export class LeagueComponent {
                     );
             }
         });
+    }
+
+    requestToJoin(){
+        if(this.league?.idLeague)
+            this.leagueService.requestToJoin(this.league?.idLeague)
     }
 
     editTitle() {
@@ -113,6 +124,26 @@ export class LeagueComponent {
     }
 
     editDescription() {
+        let descriptionDialog = this.dialogRef.open(EditTextareaDialogComponent);
+        descriptionDialog.componentInstance.title = 'Edit Descritpion';
+        descriptionDialog.componentInstance.value = this.league?.description;
+        descriptionDialog.componentInstance.confirmed.subscribe((res) => {
+            if (res) {
+                let idLeague = Number(this.league?.idLeague);
+                this.leagueService.editDescription(idLeague, res).subscribe(
+                    (res) => {
+                        this.leagueService.getLeague(idLeague);
+                        descriptionDialog.close();
+                    },
+                    (error: any) => {
+                        console.error(error);
+                    }
+                );
+            }
+        });
+    }
+
+    editPrimaryGames() {
         let descriptionDialog = this.dialogRef.open(EditTextareaDialogComponent);
         descriptionDialog.componentInstance.title = 'Edit Descritpion';
         descriptionDialog.componentInstance.value = this.league?.description;

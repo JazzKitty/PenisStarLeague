@@ -1,0 +1,5 @@
+::ngDeep .autoCompletePanelClass{
+    display: flex !important;
+    overflow: hidden !important;
+    flex-direction: column !important;
+}

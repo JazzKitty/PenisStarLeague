@@ -33,15 +33,20 @@ public class UserController {
     }
 
     @GetMapping("/createUserName")
-    public ResponseEntity<MessageDTO> createUserName(Authentication authentication, @RequestParam String userName) {
+    public ResponseEntity<MessageDTO> createUserName(Authentication authentication, @RequestParam String userName, @RequestParam String gamerTag) {
 
         if(userName == null || userName.length() < 3){
             return ResponseEntity.ok(new MessageDTO("User name is too short: ", "N"));
         }
 
-        OAuth2IntrospectionAuthenticatedPrincipal prince = (OAuth2IntrospectionAuthenticatedPrincipal) authentication.getPrincipal();
+        if(gamerTag == null || gamerTag.length() < 3){
+            return ResponseEntity.ok(new MessageDTO("gamer tag is too short: ", "N"));
+        }
 
-        boolean isAvailable = userService.createUserName(userName, prince.getAttribute("email"));
+
+        int idUser = userService.getIdUser(authentication); 
+
+        boolean isAvailable = userService.createUserName(userName, gamerTag, idUser);
         if(isAvailable){
             return ResponseEntity.ok(new MessageDTO("", "Y"));
         }

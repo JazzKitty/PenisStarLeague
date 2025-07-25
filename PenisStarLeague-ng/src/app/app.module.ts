@@ -49,6 +49,8 @@ import { EditTextareaDialogComponent } from './components/shared/edit-textarea-d
 import { NewEventComponent } from './components/events/new-event-component/new-event-component';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { AutocompleteComponent } from './components/shared/autocomplete-component/autocomplete-component';
+import { EventCardComponent } from './components/events/event-card-component/event-card-component';
+import { EditAutocompleteDialog } from './components/shared/edit-autocomplete-dialog/edit-autocomplete-dialog';
 
 // Register all Community features
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -71,6 +73,8 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     EditTextareaDialogComponent,
     NewEventComponent,
     AutocompleteComponent,
+    EventCardComponent,
+    EditAutocompleteDialog,
   ],
   imports: [
     BrowserModule,

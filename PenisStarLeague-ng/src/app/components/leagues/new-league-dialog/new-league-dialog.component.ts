@@ -3,6 +3,9 @@ import { AppService } from '../../../app.service';
 import { LoginDialogComponent } from '../../../dialog/login-dialog.component';
 import { MatDialogRef } from '@angular/material/dialog';
 import { LeagueService } from '../league.service';
+import { BehaviorSubject } from 'rxjs';
+import { Game } from '../../../model/Game';
+import { CreateLeagueDTO } from '../../../dto/CreateLeagueDTO';
 
 @Component({
   selector: 'app-new-league-dialog',
@@ -10,15 +13,15 @@ import { LeagueService } from '../league.service';
   styleUrl: './new-league-dialog.component.css'
 })
 export class NewLeagueDialogComponent {
-    public leagueName: string = ""; 
-    public description: string = ""; 
+    public createLeagueDTO: CreateLeagueDTO = new CreateLeagueDTO();
+
     public types: any[] = [];
-    public selectedType: number | null = null; 
+    public gameDictSub: BehaviorSubject<Game[]>;
 
     constructor(private appService: AppService, 
                 private dialogRef: MatDialogRef<NewLeagueDialogComponent>,
                 private leagueService: LeagueService){
-        
+        this.gameDictSub = appService.gameSub;        
     }
 
     ngOnInit(){
@@ -29,8 +32,8 @@ export class NewLeagueDialogComponent {
     }
 
     saveLeague(){
-        if(this.selectedType != null && this.leagueName.length > 3){
-            this.leagueService.saveLeague(this.leagueName, this.selectedType, this.description)?.subscribe(res =>{
+        if(this.createLeagueDTO.idLeagueType != null && this.createLeagueDTO.league.length > 3){
+            this.leagueService.saveLeague(this.createLeagueDTO)?.subscribe(res =>{
                 this.leagueService.getLeagueCards(); //get cards when new shit is saved
                 this.dialogRef.close();
             }); 
@@ -42,7 +45,7 @@ export class NewLeagueDialogComponent {
     }
 
     isSavingDisabled(): boolean{
-        return this.selectedType == null || this.leagueName.length < 3;
+        return this.createLeagueDTO.idLeagueType == null || this.createLeagueDTO.league.length < 3;
     }
 
 }

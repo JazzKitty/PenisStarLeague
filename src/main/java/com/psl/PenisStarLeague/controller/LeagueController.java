@@ -10,9 +10,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.psl.PenisStarLeague.dto.CreateLeagueDTO;
 import com.psl.PenisStarLeague.dto.LeagueCardDTO;
 import com.psl.PenisStarLeague.dto.LeagueDTO;
 import com.psl.PenisStarLeague.dto.LeagueDictDTO;
@@ -62,9 +64,9 @@ public class LeagueController {
     }
 
     @PostMapping("/createLeague")
-    public ResponseEntity<Void> createLeague(Authentication authentication, @RequestParam String leagueName, @RequestParam Integer idLeagueType, @RequestParam String description) {
+    public ResponseEntity<Void> createLeague(Authentication authentication,  @RequestBody CreateLeagueDTO createLeagueDTO) {
         int idUser = userService.getIdUser(authentication); 
-        boolean created = leagueService.createLeague(idUser, leagueName, idLeagueType, description);
+        boolean created = leagueService.createLeague(idUser, createLeagueDTO);
         if(created){
             return ResponseEntity.status(HttpStatus.SC_CREATED).build();
         }else{
@@ -111,6 +113,17 @@ public class LeagueController {
     public ResponseEntity<List<LeagueDictDTO>> getOwnedLeagues(Authentication authentication) {
         int idUser = userService.getIdUser(authentication); 
         return ResponseEntity.ok(leagueService.getOwnedLeagues(idUser));
+    }
+
+    @PostMapping("/requestToJoin")
+    public ResponseEntity<Void> editDescription(Authentication authentication,  @RequestParam Integer idLeague) {
+        int idUser = userService.getIdUser(authentication); 
+        boolean requested = leagueService.requestToJoin(idUser, idLeague); 
+        if(requested){
+            return ResponseEntity.status(HttpStatus.SC_CREATED).build();
+        }else{
+            return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).build();
+        }
     }
 
 }

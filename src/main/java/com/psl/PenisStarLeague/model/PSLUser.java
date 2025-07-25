@@ -20,4 +20,5 @@ public class PSLUser {
     private String name;
     private String email;   
     private String userName; 
+    private String gamerTag;
 }

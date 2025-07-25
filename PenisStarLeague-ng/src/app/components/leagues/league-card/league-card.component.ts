@@ -12,11 +12,9 @@ export class LeagueCardComponent {
     @Input() leagueCard: LeagueCardDTO | undefined; 
     @Output() onCLick = new EventEmitter<number>(); 
     protected readonly faUnlockIcon = faUnlock;
-    protected readonly faSheildIcon = faShield;
     protected readonly faLockIcon = faLock; 
 
     public icon: IconDefinition | undefined; 
-    
 
     constructor(private appService: AppService){
 
@@ -26,16 +24,12 @@ export class LeagueCardComponent {
         this.appService.leagueTypeSub.forEach( res =>{
             res.forEach(leagueType =>{
                 if(leagueType.idLeagueType === this.leagueCard?.idLeagueType){
-                    console.log(leagueType.code)
                     switch(leagueType.code){
                         case "PRIV":
-                            this.icon = this.faSheildIcon;
+                            this.icon = this.faLockIcon;
                             break;
                         case "PUB":
                             this.icon = this.faUnlockIcon;
-                            break; 
-                        case "PRO":
-                            this.icon = this.faLockIcon;
                             break; 
                     }
                     return; 

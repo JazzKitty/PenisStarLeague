@@ -1,7 +1,7 @@
-export class Event{
+export class EventCardDTO{
     public idEvent: number | undefined;
-    public idLeague: number | undefined;
-    public idGame: number | undefined;
+    public league: string | undefined;
+    public game: number | undefined;
     public event: string | undefined;
     public description: string | undefined;
     public isReaccuring: string | undefined; 
@@ -9,8 +9,8 @@ export class Event{
     public hour: number | undefined; 
     public year: number | undefined;
     public day: number | undefined;
-    public idMonth: number | undefined;
-    public idWeek: number | undefined; 
-    public idEventIntervalType: number | undefined; 
+    public month: number | undefined;
+    public weekDay: string | undefined; 
+    public eventInterval: string | undefined; 
     public amPm: string | undefined; 
 }

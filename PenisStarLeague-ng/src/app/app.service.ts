@@ -1,7 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import { OAuthService } from 'angular-oauth2-oidc';
+
 import { BehaviorSubject, Observable } from 'rxjs';
 import { UserDTO } from './dto/UserDTO';
 import { CreateUserDTO } from './dto/CreateUserDTO';
@@ -16,6 +15,7 @@ import { EventIntervalType } from './model/EventIntervalType';
 })
 export class AppService {
     public url: string;
+    public isLoggedIn = false;
 
     public tokenSub: BehaviorSubject<string> = new BehaviorSubject<string>("");
     public googleAuthUrl: BehaviorSubject<string> = new BehaviorSubject<string>("");
@@ -26,7 +26,7 @@ export class AppService {
     public weekSub: BehaviorSubject<Week[]> = new BehaviorSubject<Week[]>([]);
     public eventIntervalTypeSub: BehaviorSubject<EventIntervalType[]> = new BehaviorSubject<EventIntervalType[]>([]);
 
-    constructor(private http: HttpClient, private router: Router, private oauthService: OAuthService) {
+    constructor(private http: HttpClient) {
         this.url = 'http://localhost:8080/';
     }
 
@@ -47,17 +47,18 @@ export class AppService {
 
     getUser(): void {
         this.http.get<UserDTO>(this.url + "getUser", { headers: new HttpHeaders({ "Authorization": "Bearer " + this.tokenSub.value }) }).subscribe(res => {
+            this.isLoggedIn = true; 
             this.userSub.next(res)
         })
     }
 
-    createUserName(userName: string): Observable<CreateUserDTO> | undefined {
+    createUserName(userName: string, gamerTag: string): Observable<CreateUserDTO> | undefined {
         let idUser =  this.userSub.value.idUser; 
         if(idUser == null){
             return;
         }
         const headers = new HttpHeaders({ "Authorization": "Bearer " + this.tokenSub.value })
-        let params = new HttpParams().set("userName", userName).set("idUser", idUser.toString())
+        let params = new HttpParams().set("userName", userName).set("gamerTag", gamerTag);
 
         return this.http.get<CreateUserDTO>(this.url + "createUserName", { headers: headers, params: params});
     }

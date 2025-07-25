@@ -1,12 +1,18 @@
-<div style=" height: 400px; width: 400px;justify-content: space-between; display: flex; flex-direction: column; align-items: center;">
+<div style="padding: 20px; justify-content: space-between; display: flex; flex-direction: column; align-items: center;">
     <h1 style="color: #fff;">
         Create User Name
     </h1>
-    <div>
-        <label for="userName">User Name: </label>
-        <input id="userName" [(ngModel)] = "userName">
+    <div style="display: flex; flex-direction: column;">
+            <mat-form-field appearance="fill">
+                <mat-label>User Name</mat-label>
+                <input matInput [(ngModel)]="userName" name="userName" />
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Xbox 360 Gamer Tag</mat-label>
+                <input matInput [(ngModel)]="gamerTag" name="gamerTag" />
+            </mat-form-field>
     </div>
-    <button (click)="onCreate()" [disabled]="userName.length<3">
+    <button mat-button class="button-primary" (click)="onCreate()" [disabled]="userName.length<3 || gamerTag.length <= 3">
         Create
     </button>
 

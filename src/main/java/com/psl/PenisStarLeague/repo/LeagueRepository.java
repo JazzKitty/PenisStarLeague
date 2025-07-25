@@ -9,6 +9,8 @@ import com.psl.PenisStarLeague.dto.LeagueCardDTO;
 import com.psl.PenisStarLeague.dto.LeagueDictDTO;
 import com.psl.PenisStarLeague.model.League;
 
+import lombok.val;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -40,7 +42,7 @@ public interface LeagueRepository extends JpaRepository<League, Integer> {
         Select l FROM League l 
         join fetch l.userLeagues ul 
         join fetch ul.user u
-        join fetch LeagueType lt on lt.idLeagueType = l.idLeagueType 
+        join fetch l.leagueType lt
         WHERE ((lt.code = 'PRIV' and u.idUser = :idUser) OR lt.code != 'PRIV') and l.idLeague = :idLeague
         """)
     Optional<League> findLeagueById(@Param("idLeague") Integer idLeague, @Param("idUser") Integer idUser);
@@ -61,4 +63,16 @@ public interface LeagueRepository extends JpaRepository<League, Integer> {
         WHERE lp.code = 'OWN' and ul.idUser = :idUser 
         """)
     List<LeagueDictDTO> findOwnedLeagues(@Param("idUser") Integer idUser);
+    
+
+    @Query("""
+        Select l FROM League l 
+        join fetch l.userLeagues ul 
+        join fetch ul.user u
+        join fetch l.leagueType lt 
+        WHERE l.idLeague = :idLeague
+        """)
+    Optional<League> findByIdLeague(@Param("idLeague") Integer idLeague);
+
+    
 }

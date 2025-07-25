@@ -29,7 +29,7 @@ public class UserService   {
         return user;    
     }
 
-    public int getIdUser(Authentication authentication){
+    public int getIdUser(Authentication authentication){        
         OAuth2IntrospectionAuthenticatedPrincipal prince = (OAuth2IntrospectionAuthenticatedPrincipal) authentication.getPrincipal();
 
         PSLUser user = userRepository.findByEmail(prince.getAttribute("email")).orElse(null);
@@ -42,14 +42,15 @@ public class UserService   {
     /** 
      * return true if user name was able to be created for user
      */
-    public boolean createUserName(String userName, String email){
+    public boolean createUserName(String userName, String gamerTag, int idUser){
         if(userRepository.findByUserName(userName).orElse(null) == null){
-            PSLUser user = userRepository.findByEmail(email).orElse(null); 
+            PSLUser user = userRepository.findByIdUser(idUser).orElse(null);
             if(user == null){
                 return false;
             }   
             
             user.setUserName(userName);
+            user.setGamerTag(gamerTag);
 
             if(userRepository.save(user)!=null){
                 return true; 

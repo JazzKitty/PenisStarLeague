@@ -11,7 +11,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 export class LoginDialogComponent {
     public userName: string = ""; 
     public message: string = ""; 
-    private userNameSub = new Subject<string>();     
+    public gamerTag: string = "";
 
     constructor(private appService: AppService, public dialogRef: MatDialogRef<LoginDialogComponent>){
 
@@ -22,7 +22,7 @@ export class LoginDialogComponent {
     }
 
     onCreate(){
-        this.appService.createUserName(this.userName)?.subscribe(res =>{
+        this.appService.createUserName(this.userName, this.gamerTag)?.subscribe(res =>{
             if(res.proceed === "Y"){
                 this.dialogRef.close();
             }else{

@@ -1,15 +1,27 @@
-<div style="width: 100%" *ngIf="authorized != undefined">
-    <div *ngIf="authorized; else notAuth">
-        <div *ngIf="league?.isOwner==='Y'" style="display: flex; justify-content: flex-end; padding: 10px;">
-            <button (click)="deleteLeague()" mat-button
+<div style="width: 100%">
+    <div>
+        <div style="display: flex; justify-content: flex-end; padding: 10px;">
+            <button *ngIf="league?.isOwner==='Y' else joinTemplate" (click)="deleteLeague()" mat-button
                 style="width: 40px; height: 40px; align-self: flex-end; background: red; ">
                 <fa-icon style="color: white" [icon]="faTrash">
                 </fa-icon>
             </button>
+            <ng-template #joinTemplate>
+                <button mat-button *ngIf="league?.isPrivate === 'Y' && league?.isMember === 'N' && league?.isPending !== 'Y'" class="green-color"
+                    style="align-self: flex-end;" extended (click)="requestToJoin()">
+                    Request to Join League</button>
+                    <button mat-button *ngIf="league?.isPrivate === 'Y' && league?.isMember === 'N' && league?.isPending === 'Y'" class="green-color"
+                        style="align-self: flex-end;" extended disabled>
+                        Requested to Join League</button>
+
+                <button mat-button *ngIf="league?.isPrivate === 'N' && league?.isMember === 'N'" class="green-color"
+                    style="align-self: flex-end;" extended (click)="requestToJoin()">Join
+                    League</button>
+            </ng-template>
         </div>
 
-        <div style="justify-content: space-evenly; display: flex; flex-direction: row; width: 100%;">
-            <div class="column">
+        <div style="display: flex; flex-direction: row; width: 100%;">
+            <div class="column" style="flex: 1">
                 <div style="display: flex; justify-content: space-between;">
                     <div>
                         <h1>Title: {{league?.league}}</h1>
@@ -22,30 +34,39 @@
                 </div>
 
                 <h2>Owner: {{league?.owner}}</h2>
-                <h3>Member Count: {{league?.memberCount}}</h3>
-                <div style="display: flex; justify-content: space-between;">
-                    <p>{{league?.description}}</p>
-                    <button *ngIf="league?.isOwner==='Y'" (click)="editDescription()" mat-button
-                        style="width: 40px; height: 40px;">
-                        <fa-icon style="color: white" [icon]="faPencil">
-                        </fa-icon>
-                    </button>
+                <h3>Member Count: {{league?.memberCount}}</h3> 
+                <div style="display: flex; align-items: baseline; justify-content: space-between;">
+                    <h3 style="align-self: flex-end;">Primary Games: </h3>
+                    <div style="display: flex; justify-content: space-between;">
+                        <div>
+                            <div *ngFor="let game of league?.games">{{game.game}}</div>
+                        </div>
+                            <button *ngIf="league?.isOwner==='Y'" (click)="editDescription()" mat-button
+                                style="width: 40px; height: 40px;">
+                                <fa-icon style="color: white" [icon]="faPencil">
+                            </fa-icon>
+                        </button>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: baseline; justify-content: space-between;">
+                    <h3>Description: </h3>
+                    <div style="display: flex; justify-content: space-between;">
+                        <p>{{league?.description}}</p>
+                        <button *ngIf="league?.isOwner==='Y'" (click)="editDescription()" mat-button
+                            style="width: 40px; height: 40px;">
+                            <fa-icon style="color: white" [icon]="faPencil">
+                            </fa-icon>
+                        </button>
+                    </div>
                 </div>
 
             </div>
-            <div class="column">
-                <ag-grid-angular [columnDefs]="memberColDef" style="width: inherit; height: 500px;" [theme]="theme"
+            <div class="column" style="flex: 2">
+                <h2>Member(s)</h2>
+                <ag-grid-angular [columnDefs]="memberColDef" [gridOptions]="gridOptions" style="width: inherit; height: 500px;" [theme]="theme"
                     [rowData]="league?.users">
-                </ag-grid-angular>
-            </div>
-            <div class="column">
-                <ag-grid-angular [columnDefs]="memberColDef" style="width: inherit; height: 500px;" [theme]="theme"
-                    [rowData]="league?.events">
                 </ag-grid-angular>
             </div>
         </div>
     </div>
-    <ng-template #notAuth style="justify-content: center; align-items: center; display: flex">
-        No Auth
-    </ng-template>
 </div>

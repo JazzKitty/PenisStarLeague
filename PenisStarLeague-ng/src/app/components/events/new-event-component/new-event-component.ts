@@ -8,6 +8,8 @@ import { EventIntervalType } from '../../../model/EventIntervalType';
 import { LeagueService } from '../../leagues/league.service';
 import { LeagueDictDTO } from '../../../dto/LeagueDictDTO';
 import { BehaviorSubject } from 'rxjs';
+import { MatDialogRef } from '@angular/material/dialog';
+import { EventsService } from '../events.service';
 
 @Component({
   selector: 'app-new-event-component',
@@ -26,8 +28,9 @@ export class NewEventComponent {
     public ownedLeaguesSub: BehaviorSubject<LeagueDictDTO[]>; 
     public yesNoDict: any[] = [];
     public amPmDict: any[] = []; 
+    public date: Date | undefined = undefined;
 
-    constructor(private appService: AppService, private leagueService: LeagueService){
+    constructor(private appService: AppService, private leagueService: LeagueService, private dialogRef: MatDialogRef<NewEventComponent>, private eventService: EventsService){
         this.yesNoDict.push({value: "Y", display: "Yes"});
         this.yesNoDict.push({value: "N", display: "No"});
 
@@ -40,28 +43,118 @@ export class NewEventComponent {
         this.weekDictSub = appService.weekSub;
         this.monthDictSub = appService.monthSub;
         this.eventIntervalTypeDictSub = appService.eventIntervalTypeSub;
-
     }
 
     ngOnInit(){
-
         this.leagueService.getOwnedLeagues();
     }
 
     saveEvent(){
-        console.log(this.event)
+        this.eventService.saveEvent(this.event)?.subscribe(res =>{
+            
+        })
     }
 
     onClose(){
-
+        this.dialogRef.close();
     }
 
     isSavingDisabled(){
+        if(this.event.event == undefined || this.event.event.length === 0){
+            return true;
+        }
+        if(this.event.idLeague == undefined){
+            return true; 
+        }
+        if(this.event.idGame == undefined){
+            return true; 
+        }
+        if(this.event.description == undefined || this.event.description.length === 0){
+            return true;
+        }
+        if(this.event.isReaccuring == undefined || this.event.isReaccuring.length === 0){
+            return true;
+        }
+
+        if(this.event.isReaccuring === "Y"){
+            if(this.checkBadReaccuring()){
+                return true;
+            }
+        }
+        
+        if(this.event.isReaccuring === "N"){ // just check date
+            if(this.checkIfBadDate()){
+                return true;
+            }
+        }
+
+        if(this.event.hour == undefined || this.event.hour > 12 || this.event.hour < 1){
+            return true;
+        }
+
+        if(this.event.minute == undefined || this.event.minute > 60 || this.event.minute < 0){
+            return true;
+        }
+
+        if(this.event.amPm == undefined || this.event.amPm.length === 0){
+            return true;
+        }
+
         return false; 
     }
 
-    filterMyOptions(test: any){
+    checkIfBadDate(): boolean{
+        if(this.event.day == undefined || this.event.day < 1 || this.event.day > 31 ){
+            return true; 
+        }
 
+        if(this.event.idMonth == undefined || this.event.idMonth < 0 || this.event.idMonth > 11 ){
+            return true; 
+        }
+
+        if(this.event.year == undefined || this.event.year < 1900 || this.event.year > 2100 ){
+            return true; 
+        }
+
+        return false; 
     }
+
+    checkBadReaccuring(): boolean{
+        if(this.event.idEventIntervalType == null){
+            return true;
+        }
+
+        // todo: change from magic numbers 
+        switch(this.event.idEventIntervalType){
+            case 1: //yearly 
+                if(this.event.idMonth == undefined || this.event.idMonth < 0 || this.event.idMonth > 11 ){
+                    return true; 
+                }
+                if(this.event.day == undefined || this.event.day < 1 || this.event.day > 31 ){
+                    return true; 
+                }
+                break;
+                // fall through
+            case 2: //Monthly
+                if(this.event.day == undefined || this.event.day < 1 || this.event.day > 31 ){
+                    return true; 
+                }
+                break;
+            case 3: //Weekly 
+                if(this.event.idWeek == undefined || this.event.idWeek < 0 || this.event.idWeek > 7 ){
+                    return true; 
+                }
+        } 
+        return false; 
+
+        
+    }
+
+    onDateChange(){
+        this.event.day = this.date?.getDate();
+        this.event.idMonth = this.date?.getMonth();
+        this.event.year = this.date?.getFullYear(); 
+    }
+
 
 }

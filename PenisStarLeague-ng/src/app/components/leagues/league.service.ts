@@ -5,6 +5,7 @@ import { LeagueCardDTO } from '../../dto/LeagueCardDTO';
 import { LeagueDTO } from '../../dto/LeagueDTO';
 import { AppService } from '../../app.service';
 import { LeagueDictDTO } from '../../dto/LeagueDictDTO';
+import { CreateLeagueDTO } from '../../dto/CreateLeagueDTO';
 
 @Injectable({
     providedIn: 'root'
@@ -22,16 +23,14 @@ export class LeagueService {
         this.url = appService.url;
     }
 
-    saveLeague(leagueName: string, idLeagueType: number, description: string): Observable<any> | undefined{ 
+    saveLeague(createLeagueDTO: CreateLeagueDTO): Observable<any> | undefined{ 
         let idUser =  this.appService.userSub.value.idUser; 
         if(idUser == null){
             return;
         }
 
         const headers = new HttpHeaders({ "Authorization": "Bearer " + this.appService.tokenSub.value })
-        let params = new HttpParams().set("leagueName", leagueName).set("idLeagueType", idLeagueType).set("description", description);
-
-        return this.http.post<any>(this.url + "createLeague", null, {headers: headers,params: params})
+        return this.http.post<any>(this.url + "createLeague", createLeagueDTO, {headers: headers});
     }
 
     getLeagueCards(): void {
@@ -83,6 +82,16 @@ export class LeagueService {
 
         this.http.get<LeagueDictDTO[]>(this.url + "getOwnedLeagues", {headers: headers}).subscribe(res =>{
             this.ownedLeagueSub.next(res);
+        })
+
+    }
+
+    requestToJoin(idLeague: number){
+        let headers = new HttpHeaders({ "Authorization": "Bearer " + this.appService.tokenSub.value })
+        let params = new HttpParams().set("idLeague", idLeague);
+
+        this.http.post(this.url + "requestToJoin", null, {headers: headers, params: params}).subscribe( res =>{
+            this.getLeague(idLeague); //refresh 
         })
 
     }
