@@ -1,1 +1,17 @@
-<p>edit-autocomplete-dialog works!</p>
+<div class="dialog" tabindex="-1" role="dialog">
+    <h2 class="dialog-header">{{title}}</h2>
+    <app-autocomplete-component [valueSub]='dictSub' [id]='idCol' [display]='displayCol' [(value)]="value" [isMultiSelect]="true">
+        title="Select a Game">
+    </app-autocomplete-component>
+    <div class="dialog-footer">
+    <button
+      mat-button
+      class="button-primary"
+      (click)="onConfirm()">
+      Confirm
+    </button>
+    <button mat-button class="button-secondary" (click)="onClose()">
+      Dismiss
+    </button>
+  </div>
+</div>

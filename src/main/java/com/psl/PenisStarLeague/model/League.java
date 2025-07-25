@@ -53,7 +53,7 @@ public class League {
         gameLeague.setLeague(this);
     }
 
-    @OneToMany(mappedBy = "league", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "league", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<GameLeague> gameLeagues;
 
     @ManyToOne

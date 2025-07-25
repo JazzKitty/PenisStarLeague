@@ -77,6 +77,14 @@ export class LeagueService {
         return this.http.post<any>(this.url + "editDescription", null, {headers: headers, params: params});
     }
 
+    editPrimaryGames(idLeague: number, idGames: number[]){
+        let headers = new HttpHeaders({ "Authorization": "Bearer " + this.appService.tokenSub.value })
+        let params = new HttpParams().set("idLeague", idLeague).set("primaryGames", idGames.join(","));
+
+        return this.http.post<any>(this.url + "editPrimaryGames", null, {headers: headers, params: params});
+    }
+
+
     getOwnedLeagues(){
         let headers = new HttpHeaders({ "Authorization": "Bearer " + this.appService.tokenSub.value })
 

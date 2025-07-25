@@ -22,6 +22,7 @@ import com.psl.PenisStarLeague.model.League;
 import com.psl.PenisStarLeague.model.UserLeague;
 import com.psl.PenisStarLeague.model.dictionary.LeaguePosition;
 import com.psl.PenisStarLeague.model.dictionary.LeagueType;
+import com.psl.PenisStarLeague.repo.GameLeagueRepository;
 import com.psl.PenisStarLeague.repo.GameRepository;
 import com.psl.PenisStarLeague.repo.LeaguePositionRepository;
 import com.psl.PenisStarLeague.repo.LeagueRepository;
@@ -39,6 +40,7 @@ public class LeagueService {
     private final UserRepository userRepository;
     private final UserLeagueRepository userLeagueRepository;
     private final GameRepository gameRepository;
+    private final GameLeagueRepository gameLeagueRepository;
 
     public List<LeagueType> getLeagueTypes() {
         return leagueTypeRepository.findAll();
@@ -202,6 +204,34 @@ public class LeagueService {
             return false;
         } else {
             league.setDescription(description);
+            leagueRepository.save(league);
+            return true;
+        }
+    }
+
+    public boolean editPrimaryGames(int idLeague, int idUser, Set<Integer> idGames){
+        League league = leagueRepository.findByIdUserAndIdLeague(idLeague, idUser).orElse(null);
+        if (league == null) {
+            return false;
+        } else {
+            Set<GameLeague> gameLeagues = league.getGameLeagues();
+            Set<GameLeague> toRemove = new HashSet<>();
+            for(GameLeague gameLeague: gameLeagues){
+                int idGame = gameLeague.getGame().getIdGame();
+                if(idGames.contains(idGame)){
+                    idGames.remove(idGame);
+                }else{
+                    toRemove.add(gameLeague);
+                }
+            }
+            league.getGameLeagues().removeAll(toRemove);
+            
+            for(int idGame: idGames){
+                GameLeague newGameLeague = new GameLeague(); 
+                newGameLeague.setGame(gameRepository.getReferenceById(idGame));
+                league.addNewGameLeague(newGameLeague);
+            }
+
             leagueRepository.save(league);
             return true;
         }

@@ -41,7 +41,7 @@
                         <div>
                             <div *ngFor="let game of league?.games">{{game.game}}</div>
                         </div>
-                            <button *ngIf="league?.isOwner==='Y'" (click)="editDescription()" mat-button
+                            <button *ngIf="league?.isOwner==='Y'" (click)="editPrimaryGames()" mat-button
                                 style="width: 40px; height: 40px;">
                                 <fa-icon style="color: white" [icon]="faPencil">
                             </fa-icon>

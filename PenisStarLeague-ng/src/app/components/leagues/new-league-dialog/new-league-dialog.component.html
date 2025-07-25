@@ -17,7 +17,8 @@
       ">
             <mat-form-field appearance="fill">
                 <mat-label>League Name</mat-label>
-                <input matInput placeholder="Ex. Vagina Star League" [(ngModel)]="createLeagueDTO.league" name="leagueName" />
+                <input matInput placeholder="Ex. Vagina Star League" [(ngModel)]="createLeagueDTO.league"
+                    name="leagueName" />
             </mat-form-field>
             <mat-form-field>
                 <mat-label>Choose an option</mat-label>
@@ -28,7 +29,6 @@
                 </mat-select>
             </mat-form-field>
         </div>
-
         <mat-form-field style="width: inherit">
             <mat-label>Description</mat-label>
             <textarea [(ngModel)]="createLeagueDTO.description" matInput maxlength="200" cdkTextareaAutosize
@@ -37,9 +37,10 @@
         <h2>
             Primary Games
         </h2>
-            <app-autocomplete-component [valueSub]='gameDictSub' id='idGame' display='game' [(value)]="createLeagueDTO.idGames" [isMultiSelect]="true">
-                title="Select a Game">
-            </app-autocomplete-component>
+        <app-autocomplete-component [valueSub]='gameDictSub' id='idGame' display='game'
+            [(value)]="createLeagueDTO.idGames" [isMultiSelect]="true">
+            title="Select a Game">
+        </app-autocomplete-component>
     </div>
     <div class="dialog-footer">
         <button mat-button class="button-primary" [disabled]="isSavingDisabled()" (click)="saveLeague()">

@@ -11,6 +11,7 @@ import { EditTextareaDialogComponent } from '../../shared/edit-textarea-dialog.c
 import { AppService } from '../../../app.service';
 import { BehaviorSubject } from 'rxjs';
 import { Game } from '../../../model/Game';
+import { EditAutocompleteDialog } from '../../shared/edit-autocomplete-dialog/edit-autocomplete-dialog';
 
 @Component({
     selector: 'app-league',
@@ -40,7 +41,8 @@ export class LeagueComponent {
         private leagueService: LeagueService,
         private route: ActivatedRoute,
         private dialogRef: MatDialog,
-        private router: Router
+        private router: Router,
+        private appService: AppService
         ) { 
 
     }
@@ -144,16 +146,25 @@ export class LeagueComponent {
     }
 
     editPrimaryGames() {
-        let descriptionDialog = this.dialogRef.open(EditTextareaDialogComponent);
-        descriptionDialog.componentInstance.title = 'Edit Descritpion';
-        descriptionDialog.componentInstance.value = this.league?.description;
-        descriptionDialog.componentInstance.confirmed.subscribe((res) => {
+        let primaryGameDialog = this.dialogRef.open(EditAutocompleteDialog);
+        primaryGameDialog.componentInstance.title = 'Edit Primary Games';
+
+        let idGames: number[] = [];
+        this.league?.games.forEach(val =>{
+            if(val.idGame)
+                idGames.push(val.idGame);
+        })
+        primaryGameDialog.componentInstance.value = idGames;
+        primaryGameDialog.componentInstance.idCol = "idGame";
+        primaryGameDialog.componentInstance.displayCol = "game";
+        primaryGameDialog.componentInstance.dictSub = this.appService.gameSub; 
+        primaryGameDialog.componentInstance.confirmed.subscribe((res) => {
             if (res) {
                 let idLeague = Number(this.league?.idLeague);
-                this.leagueService.editDescription(idLeague, res).subscribe(
+                this.leagueService.editPrimaryGames(idLeague, res).subscribe(
                     (res) => {
                         this.leagueService.getLeague(idLeague);
-                        descriptionDialog.close();
+                        primaryGameDialog.close();
                     },
                     (error: any) => {
                         console.error(error);

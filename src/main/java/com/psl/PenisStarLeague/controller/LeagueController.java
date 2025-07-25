@@ -4,6 +4,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.List;
+import java.util.Set;
 
 import org.apache.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,8 @@ import com.psl.PenisStarLeague.dto.LeagueDictDTO;
 import com.psl.PenisStarLeague.model.dictionary.LeagueType;
 import com.psl.PenisStarLeague.service.LeagueService;
 import com.psl.PenisStarLeague.service.UserService;
+import com.psl.PenisStarLeague.util.PSLUtil;
+
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -97,11 +100,23 @@ public class LeagueController {
         }
     }
 
-    
     @PostMapping("/editDescription")
-    public ResponseEntity<Void> editDescription(Authentication authentication,  @RequestParam Integer idLeague, @RequestParam String description) {
+    public ResponseEntity<Void> editDescription(Authentication authentication, @RequestParam Integer idLeague, @RequestParam String description) {
         int idUser = userService.getIdUser(authentication); 
         boolean created = leagueService.editDescription(idLeague, idUser, description);
+        if(created){
+            return ResponseEntity.status(HttpStatus.SC_CREATED).build();
+        }else{
+            return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).build();
+        }
+    }
+
+    @PostMapping("/editPrimaryGames")
+    public ResponseEntity<Void> editPrimaryGames(Authentication authentication, @RequestParam Integer idLeague, @RequestParam String primaryGames) {
+        int idUser = userService.getIdUser(authentication); 
+        Set<Integer> idGames = PSLUtil.stringToSet(primaryGames, ","); 
+
+        boolean created = leagueService.editPrimaryGames(idLeague, idUser, idGames);
         if(created){
             return ResponseEntity.status(HttpStatus.SC_CREATED).build();
         }else{
