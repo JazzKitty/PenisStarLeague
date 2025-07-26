@@ -28,5 +28,6 @@ spring:
     show-sql: true  
   config:
     import: optional:file:.env[.properties]
-
+server:
+    port: 5000
 
