@@ -8,9 +8,10 @@ import { Game } from '../../../model/Game';
 import { CreateLeagueDTO } from '../../../dto/CreateLeagueDTO';
 
 @Component({
-  selector: 'app-new-league-dialog',
-  templateUrl: './new-league-dialog.component.html',
-  styleUrl: './new-league-dialog.component.css'
+    selector: 'app-new-league-dialog',
+    templateUrl: './new-league-dialog.component.html',
+    styleUrl: './new-league-dialog.component.css',
+    standalone: false
 })
 export class NewLeagueDialogComponent {
     public createLeagueDTO: CreateLeagueDTO = new CreateLeagueDTO();

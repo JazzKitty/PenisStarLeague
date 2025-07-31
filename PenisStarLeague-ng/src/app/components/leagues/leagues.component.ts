@@ -13,9 +13,10 @@ import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { faPencil } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'app-leagues',
-  templateUrl: './leagues.component.html',
-  styleUrl: './leagues.component.css'
+    selector: 'app-leagues',
+    templateUrl: './leagues.component.html',
+    styleUrl: './leagues.component.css',
+    standalone: false
 })
 export class LeaguesComponent {
 

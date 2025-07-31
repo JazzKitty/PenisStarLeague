@@ -4,9 +4,10 @@ import { faShield, faUnlock, faLock, IconDefinition } from '@fortawesome/free-so
 import { AppService } from '../../../app.service';
 
 @Component({
-  selector: 'app-league-card',
-  templateUrl: './league-card.component.html',
-  styleUrl: './league-card.component.css'
+    selector: 'app-league-card',
+    templateUrl: './league-card.component.html',
+    styleUrl: './league-card.component.css',
+    standalone: false
 })
 export class LeagueCardComponent {
     @Input() leagueCard: LeagueCardDTO | undefined; 

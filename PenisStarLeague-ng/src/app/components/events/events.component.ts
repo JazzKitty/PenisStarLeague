@@ -12,7 +12,8 @@ import { Subject } from 'rxjs';
 @Component({
     selector: 'app-events',
     templateUrl: './events.component.html',
-    styleUrl: './events.component.css'
+    styleUrl: './events.component.css',
+    standalone: false
 })
 export class EventsComponent {
     constructor(private dialogRef: MatDialog,

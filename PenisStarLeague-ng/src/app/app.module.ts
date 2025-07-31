@@ -54,7 +54,6 @@ import { EditAutocompleteDialog } from './components/shared/edit-autocomplete-di
 import { Profile } from './components/profile/profile';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
-import { MatTimepickerModule } from '@angular/material/timepicker'; 
 
 // Register all Community features
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -109,8 +108,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     MatSelectModule,
     AgGridAngular,
     MatDatepickerModule,
-    MatTimepickerModule,
-    CalendarModule.forRoot({
+        CalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory,
     }),
