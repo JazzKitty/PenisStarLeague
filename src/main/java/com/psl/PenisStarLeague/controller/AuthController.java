@@ -29,11 +29,14 @@ public class AuthController {
     private String clientId; 
     @Value("${spring.security.oauth2.resourceserver.opaque-token.clientSecret}")
     private String clientSercet; 
+    @Value("${spring.security.oauth2.resourceserver.opaque-token.redirectUri}")
+    private String redirectUri; 
+
 
     @GetMapping("/auth/url")
     public ResponseEntity<UrlDTO> auth(){
         String url = new GoogleAuthorizationCodeRequestUrl(clientId,
-        "http://localhost:4200",
+        redirectUri,
         Arrays.asList("email", "profile", "openid") ).build();
         return ResponseEntity.ok(new UrlDTO(url)); 
     }
@@ -51,7 +54,7 @@ public class AuthController {
                 clientId,
                 clientSercet,
                 code,
-                "http://localhost:4200"
+                redirectUri
 
             ).setScopes(scopes).execute().getAccessToken();
         }catch(IOException exception){

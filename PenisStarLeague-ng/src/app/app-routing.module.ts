@@ -7,14 +7,14 @@ import { GamesComponent } from './components/games/games.component';
 import { LeaguesComponent } from './components/leagues/leagues.component';
 import { LoadingComponent } from './components/loading/loading.component';
 import { LeagueComponent } from './components/leagues/league/league.component';
+import { Profile } from './components/profile/profile';
+import { AuthGuard } from './components/shared/AuthGaurd';
 
 
 export const routes: Routes = [
 
-  // { path: '', redirectTo: '/home', pathMatch: 'full'},
     {path: 'loading', component: LoadingComponent},
-
-    {path: 'home', component: LeagueComponent },
+    {path: 'home', component: LeaguesComponent },
     {path: 'tournaments', component: TournamentsComponent },
     {path: 'events', component: EventsComponent },
     {path: 'leagues', component: LeaguesComponent,
@@ -23,7 +23,8 @@ export const routes: Routes = [
             component: LeagueComponent,
         }]
      },
-    {path: 'games', component: GamesComponent }
+    {path: 'games', component: GamesComponent},
+    {path: 'profile', component: Profile, canActivate: [AuthGuard]}
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

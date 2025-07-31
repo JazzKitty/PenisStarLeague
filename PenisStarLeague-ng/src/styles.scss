@@ -2,6 +2,8 @@
 
 @include mat.core();
 
+@import "../node_modules/angular-calendar/css/angular-calendar.css";
+
 $primary-accent: #7EB900;
 $secondary-accent: #606060; 
 
@@ -69,4 +71,31 @@ h1, h2 {
     align-self: flex-end;
     gap: 10px;
     display: flex;
+}
+
+.cal-month-view{
+    background-color: transparent;
+}
+
+.cal-cell-row{
+    background-color: transparent !important; 
+}
+
+.cal-cell :hover{
+    background-color: #404040 !important;
+}
+
+.cal-cell .call-day-cell .cal-today{
+    background-color: black !important;
+}
+
+.cal-month-view .cal-day-cell.cal-today {
+  background-color: $primary-accent !important; 
+}
+
+.cal-month-view .cal-day-cell.cal-weekend .cal-day-number{
+    color: white;
+}
+.cal-month-view .cal-cell {
+    background-color: transparent !important;
 }

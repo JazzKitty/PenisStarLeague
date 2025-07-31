@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { faBars, faSignIn } from "@fortawesome/free-solid-svg-icons";
 import { AppService } from './app.service';
 import { ActivatedRoute, NavigationExtras, Router, RouterOutlet } from '@angular/router';
+import { environment } from './../environments/environment';
 
 
 @Component({

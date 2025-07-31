@@ -15,16 +15,19 @@ public class WebConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
                     .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                    .allowedOrigins("http://localhost:4200")
+                    .allowedOrigins(
+                        "http://localhost:4200", 
+                                    "https://penisstarleague.com", 
+                                    "http://penisstarleague.com",
+                                    "https://www.penisstarleague.com",
+                                    "http://www.penisstarleague.com", 
+                                    "https://penisstarleague.com",
+                                    "https://jazzkitty.github.io",
+                                    "http://jazzkitty.github.io")
                     .allowedHeaders("*") // Allow all headers
-                     .allowCredentials(true); // Allow credentials (e.g
+                    .allowCredentials(true); // Allow credentials (e.g
             }
         };
     }
     
 }
-            // registry.addMapping("/**") // Apply to all endpoints
-            //         .allowedOrigins("http://your-client-origin.com") // Replace with your client's origin
-            //         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-            //         .allowedHeaders("*") // Allow all headers
-            //         .allowCredentials(true); // Allow credentials (e.g.

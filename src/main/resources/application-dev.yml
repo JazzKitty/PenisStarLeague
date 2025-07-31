@@ -1,0 +1,8 @@
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        opaque-token:
+          redirectUri: http://localhost:4200
+

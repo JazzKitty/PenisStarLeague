@@ -39,14 +39,29 @@
         height: inherit;
         width: inherit;
         gap: 10px;
-        display: flex;
-      ">
+        display: flex;">    
+            <mat-form-field>
+                <mat-label>Choose a Date</mat-label>
+                <input matInput [matDatepicker]="picker">
+                <mat-hint>MM/DD/YYYY</mat-hint>
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Choose a Date</mat-label>
+                <input matInput [matTimePicker]="picker">
+                <mat-hint>MM/DD/YYYY</mat-hint>
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+
+
             <mat-form-field>
                 <mat-label>Is Event Reaccurring</mat-label>
                 <mat-select [(value)]="event.isReaccuring">
-                    <mat-option *ngFor="let yesNo of yesNoDict" [value]="yesNo.value">{{
-                        yesNo.display
-                        }}</mat-option>
+                    <mat-option *ngFor="let yesNo of yesNoDict" [value]="yesNo.value">
+                        {{yesNo.display}}
+                    </mat-option>
                 </mat-select>
             </mat-form-field>
 
@@ -55,53 +70,7 @@
                     display='intervalType' [(value)]="event.idEventIntervalType" title="Select a Interval Type">
                 </app-autocomplete-component>
             </div>
-
-            <mat-form-field *ngIf="event.isReaccuring === 'N'" appearance="fill">
-                <mat-label>Choose a date</mat-label>
-                <input matInput [matDatepicker]="picker" [(ngModel)] = "date" (ngModelChange)="onDateChange()">
-                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
-            </mat-form-field>
-
-            <mat-form-field appearance="fill" *ngIf="(event.idEventIntervalType === 2 || event.idEventIntervalType === 1) && event.isReaccuring === 'Y'">
-                <mat-label>Day</mat-label>
-                <input matInput type="number" min="0" max="31" [(ngModel)]="event.day" name="eventname" />
-            </mat-form-field>
-
-            <app-autocomplete-component *ngIf="event.idEventIntervalType === 1 && event.isReaccuring === 'Y'"
-                [valueSub]='monthDictSub' id='idMonth' display='month' [(value)]="event.idWeek" title="Select Month">
-            </app-autocomplete-component>
-
-            <app-autocomplete-component *ngIf="event.idEventIntervalType === 3 && event.isReaccuring === 'Y'"
-                [valueSub]='weekDictSub' id='idWeek' display='weekDay' [(value)]="event.idWeek" title="Select Weekday">
-            </app-autocomplete-component>
         </div>
-        <div style="align-self: flex-start;
-            height: inherit;
-            width: inherit;
-            gap: 10px;
-            display: flex;">
-
-            <mat-form-field appearance="fill">
-                <mat-label>Hour</mat-label>
-                <input matInput type="number" min="1" max="12" [(ngModel)]="event.hour" name="eventname" />
-            </mat-form-field>
-
-            <mat-form-field appearance="fill">
-                <mat-label>Minute</mat-label>
-                <input matInput type="number" min="0" max="60" [(ngModel)]="event.minute" name="eventname" />
-            </mat-form-field>
-
-            <mat-form-field>
-                <mat-label>AM or PM</mat-label>
-                <mat-select [(value)]="event.amPm">
-                    <mat-option *ngFor="let amPm of amPmDict" [value]="amPm.value">{{
-                        amPm.display
-                        }}</mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
-
     </div>
     <div class="dialog-footer">
         <button mat-button class="button-primary" [disabled]="isSavingDisabled()" (click)="saveEvent()">

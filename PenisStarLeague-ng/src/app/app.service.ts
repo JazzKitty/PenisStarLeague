@@ -9,6 +9,7 @@ import { Game } from './model/Game';
 import { Month } from './model/Month';
 import { Week } from './model/Week'
 import { EventIntervalType } from './model/EventIntervalType';
+import { environment } from './../environments/environment';
 
 @Injectable({
     providedIn: 'root'
@@ -27,7 +28,7 @@ export class AppService {
     public eventIntervalTypeSub: BehaviorSubject<EventIntervalType[]> = new BehaviorSubject<EventIntervalType[]>([]);
 
     constructor(private http: HttpClient) {
-        this.url = 'http://localhost:8080/';
+        this.url = environment.apiUrl;
     }
 
     getAuthUrl(): void {
@@ -93,4 +94,5 @@ export class AppService {
             this.eventIntervalTypeSub.next(res);
         })
     }
+    
 }

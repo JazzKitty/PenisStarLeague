@@ -2,24 +2,29 @@
   <div 
     style="display: flex; flex-direction: row; justify-content: space-between; padding: 10px;"
   >
-    <h2>Events</h2>
+    <h1>Events</h1>
     <button class="green-color" mat-fab extended [disabled]="newEventDisable()" (click)="newEvent()">New Event</button>
   </div>
   <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px;">
     <button (click)="scrollLeft()" mat-icon-button aria-label="Go back" style="height: min-content;">
       <mat-icon>arrow_back</mat-icon>
     </button>
-    <cdk-virtual-scroll-viewport
-      orientation="horizontal"
-      itemSize="12"
-      class="example-viewport"
-      style="height: 400px; overflow-y: hidden; flex-grow: 1;">
-      <app-event-card-component *ngFor="let item of eventCards" [event]="item" class="example-item">
-      </app-event-card-component >
-    </cdk-virtual-scroll-viewport>
+    <div style="width: 100%; display: flex; flex-direction: column; justify-content: center;">
+        <h2 style="align-self: center;">
+            {{viewDate.toLocaleString('default', {month: 'long'})}} {{viewDate.getFullYear()}} 
+        </h2>
+        <mwl-calendar-month-view style="width: 100%"
+            [viewDate]="viewDate"
+            [events]="events"
+            [refresh]="refresh">
+        </mwl-calendar-month-view>
+    </div>
+
+
     <button (click)="scrollRight()" mat-icon-button aria-label="Scroll Forward" style="flex-grow: 0; height: min-content;">
       <mat-icon>arrow_forward</mat-icon>
     </button>
   </div>
+
   <router-outlet></router-outlet>
 </div>

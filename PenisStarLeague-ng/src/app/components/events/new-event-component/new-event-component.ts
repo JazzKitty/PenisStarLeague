@@ -29,6 +29,7 @@ export class NewEventComponent {
     public yesNoDict: any[] = [];
     public amPmDict: any[] = []; 
     public date: Date | undefined = undefined;
+    public datePicker: Date = new Date();
 
     constructor(private appService: AppService, private leagueService: LeagueService, private dialogRef: MatDialogRef<NewEventComponent>, private eventService: EventsService){
         this.yesNoDict.push({value: "Y", display: "Yes"});

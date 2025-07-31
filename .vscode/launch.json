@@ -9,7 +9,8 @@
       "name": "PenisStarLeagueApplication",
       "request": "launch",
       "mainClass": "com.psl.PenisStarLeague.PenisStarLeagueApplication",
-      "projectName": "PenisStarLeague"
+      "projectName": "PenisStarLeague",
+      "args": "--spring.profiles.active=dev"
     },
     {
       "name": "ng serve",

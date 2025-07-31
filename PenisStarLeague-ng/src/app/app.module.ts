@@ -51,6 +51,10 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { AutocompleteComponent } from './components/shared/autocomplete-component/autocomplete-component';
 import { EventCardComponent } from './components/events/event-card-component/event-card-component';
 import { EditAutocompleteDialog } from './components/shared/edit-autocomplete-dialog/edit-autocomplete-dialog';
+import { Profile } from './components/profile/profile';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { MatTimepickerModule } from '@angular/material/timepicker'; 
 
 // Register all Community features
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -75,6 +79,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     AutocompleteComponent,
     EventCardComponent,
     EditAutocompleteDialog,
+    Profile,
   ],
   imports: [
     BrowserModule,
@@ -103,7 +108,12 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     MatOption,
     MatSelectModule,
     AgGridAngular,
-    MatDatepickerModule
+    MatDatepickerModule,
+    MatTimepickerModule,
+    CalendarModule.forRoot({
+      provide: DateAdapter,
+      useFactory: adapterFactory,
+    }),
 ],
   providers: [
     provideAnimationsAsync(),

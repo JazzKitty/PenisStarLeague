@@ -1,0 +1,54 @@
+<div style="width: 100%; height: 100%; padding: 10px;">
+    <div style="display: flex; flex-direction: row; justify-content: space-between;">
+        <h1>Profile</h1>
+    </div>
+    <div style="display: flex; flex-direction: row; width: 100%;">
+        <div class="column" style="flex: 1">
+            <div style="display: flex; justify-content: space-between;">
+                <div>
+                    <h2>UserName: </h2>
+                </div>
+                <button (click)="editUserName()" mat-button
+                    style="width: 40px; height: 40px;">
+                    <fa-icon style="color: white" [icon]="faPencil">
+                    </fa-icon>
+                </button>
+            </div>
+        </div>
+        <div class="column" style="flex: 1">
+            <div style="display: flex; justify-content: space-between;">
+                <div>
+                    <h2>GamerTag: </h2>
+                </div>
+                <button (click)="editGamerTag()" mat-button
+                    style="width: 40px; height: 40px;">
+                    <fa-icon style="color: white" [icon]="faPencil">
+                    </fa-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+        <div style="display: flex; flex-direction: row; width: 100%;">
+        <div class="column" style="flex: 1">
+            <div style="display: flex; justify-content: space-between;">
+                <mat-form-field style="width: 100%">
+                <mat-label>Bio</mat-label>
+                <textarea
+                    matInput
+                    maxlength="200"
+                    cdkTextareaAutosize
+                    #autosize="cdkTextareaAutosize"
+                    cdkAutosizeMinRows="5"
+                    cdkAutosizeMaxRows="100"
+                ></textarea>
+                </mat-form-field>
+                <button (click)="editBio()" mat-button
+                    style="width: 40px; height: 40px;">
+                    <fa-icon style="color: white" [icon]="faPencil">
+                    </fa-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+
+</div>

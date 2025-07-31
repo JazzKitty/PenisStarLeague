@@ -17,7 +17,7 @@
                     Penis Star League
                 </h1>
                 <div *ngIf="!userName; else loggedIn" style="margin-left: auto; display: flex; align-items: center;">
-                    <h2 >
+                    <h2>
                         Login In
                     </h2>
                     <button style="width: 40px; height: 40px;
@@ -34,9 +34,17 @@
                     </button>
                 </div>
                 <ng-template #loggedIn>
-                    <h2 style="margin-left: auto;">
-                        {{userName}}
-                    </h2>
+                    <button style="border: none;
+                                    color: transparent;
+                                    background-color: transparent;                
+                                    text-align: center;
+                                    text-decoration: none;
+                                    display: inline-block;
+                                    margin-left: auto">
+                        <h2  routerLink="profile">
+                            {{userName}}
+                        </h2>
+                    </button>
                 </ng-template>
             </mat-toolbar-row>
         </mat-toolbar>
