@@ -39,22 +39,28 @@
         height: inherit;
         width: inherit;
         gap: 10px;
-        display: flex;">    
+        display: flex;">
             <mat-form-field>
                 <mat-label>Choose a Date</mat-label>
-                <input matInput [matDatepicker]="picker">
-                <mat-hint>MM/DD/YYYY</mat-hint>
+                <input matInput matInput [(ngModel)]="event.date" [matDatepicker]="picker">
+                <mat-hint style="color: white;">MM/DD/YYYY</mat-hint>
                 <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
             <mat-form-field>
-                <mat-label>Choose a Date</mat-label>
-                <mat-hint>MM/DD/YYYY</mat-hint>
-                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
+                <mat-label>Pick a time</mat-label>
+                <input matInput [(ngModel)]="event.date" [matTimepicker]="timepicker">
+                <mat-timepicker-toggle matIconSuffix [for]="timepicker" />
+                <mat-timepicker #timepicker />
             </mat-form-field>
-
-
+        </div>
+        <p style="color: white;"> {{event.date}}</p>
+        <div style="
+            align-self: flex-start;
+            height: inherit;
+            width: inherit;
+            gap: 10px;
+            display: flex;">
             <mat-form-field>
                 <mat-label>Is Event Reaccurring</mat-label>
                 <mat-select [(value)]="event.isReaccuring">

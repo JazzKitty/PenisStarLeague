@@ -1,6 +1,6 @@
 package com.psl.PenisStarLeague.model;
 
-import java.util.Date;
+import java.time.Instant;
 
 import com.psl.PenisStarLeague.model.dictionary.LeaguePosition;
 
@@ -22,7 +22,7 @@ public class UserLeague {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idUserLeague;
-    private Date joinDate; 
+    private Instant joinDate; 
 
     @ManyToOne
     @JoinColumn(name = "idLeague", nullable = false)

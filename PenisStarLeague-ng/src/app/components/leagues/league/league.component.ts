@@ -22,6 +22,7 @@ import { EditAutocompleteDialog } from '../../shared/edit-autocomplete-dialog/ed
 export class LeagueComponent {
     public league: LeagueDTO | undefined;
     public memberColDef: ColDef[] | undefined;
+    public eventColDef: ColDef[] | undefined;
 
     public gridOptions: any; 
     protected readonly faPencil = faPencil;
@@ -65,12 +66,20 @@ export class LeagueComponent {
     }
 
     setUpColDef() {
+
+
         this.memberColDef = [
             { field: 'userName', flex: 1},
             { field: 'gamerTag', flex: 1 },
             { field: 'joinDate', flex: 1 },
-            { field: 'bio', flex: 3},
+            { field: 'bio', flex: 2},
+            { field: 'joined', flex: 1, hide: this.league?.isOwner !== 'Y'}
         ];
+
+        this.eventColDef = [
+            {field: 'event', flex: 1},
+            {field: 'occuring', flex: 1}
+        ]
 
         this.gridOptions = {
 

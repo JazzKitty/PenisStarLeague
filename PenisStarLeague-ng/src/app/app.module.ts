@@ -49,11 +49,12 @@ import { EditTextareaDialogComponent } from './components/shared/edit-textarea-d
 import { NewEventComponent } from './components/events/new-event-component/new-event-component';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { AutocompleteComponent } from './components/shared/autocomplete-component/autocomplete-component';
-import { EventCardComponent } from './components/events/event-card-component/event-card-component';
 import { EditAutocompleteDialog } from './components/shared/edit-autocomplete-dialog/edit-autocomplete-dialog';
 import { Profile } from './components/profile/profile';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import {MatTimepickerModule} from '@angular/material/timepicker'; 
+import { EventCardComponent } from './components/events/event-card-component/event-card-component'
 
 // Register all Community features
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -76,9 +77,9 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     EditTextareaDialogComponent,
     NewEventComponent,
     AutocompleteComponent,
-    EventCardComponent,
     EditAutocompleteDialog,
     Profile,
+    EventCardComponent,
   ],
   imports: [
     BrowserModule,
@@ -108,7 +109,8 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     MatSelectModule,
     AgGridAngular,
     MatDatepickerModule,
-        CalendarModule.forRoot({
+    MatTimepickerModule,
+    CalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory,
     }),

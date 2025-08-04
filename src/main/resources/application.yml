@@ -22,9 +22,12 @@ spring:
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 
+
     properties:
       hibernate: 
         dialect: org.hibernate.dialect.MySQLDialect
+      jdbc:
+        time-zone: 'UTC'
     show-sql: true  
   config:
     import: optional:file:.env[.properties]

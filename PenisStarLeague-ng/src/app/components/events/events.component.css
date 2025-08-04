@@ -1,0 +1,7 @@
+::ng-deep .cdk-virtual-scroll-content-wrapper {
+  display: flex !important;
+  flex-direction: row;
+  margin: 10px;
+  overflow-y: none;
+  align-items: center;
+}

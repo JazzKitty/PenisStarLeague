@@ -14,12 +14,12 @@
   "dependencies": {
     "@angular-package/sass": "^0.19.0-beta",
     "@angular/animations": "^19.2.14",
-    "@angular/cdk": "18.2.11",
+    "@angular/cdk": "19.x.x",
     "@angular/common": "^19.2.14",
     "@angular/compiler": "^19.2.14",
     "@angular/core": "^19.2.14",
     "@angular/forms": "^19.2.14",
-    "@angular/material": "^18.2.11",
+    "@angular/material": "^19.x.x",
     "@angular/platform-browser": "^19.2.14",
     "@angular/platform-browser-dynamic": "^19.2.14",
     "@angular/platform-server": "^19.2.14",
@@ -41,7 +41,7 @@
     "zone.js": "~0.15.1"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^18.2.4",
+    "@angular-devkit/build-angular": "^19.x.x",
     "@angular/cli": "^20.0.6",
     "@angular/compiler-cli": "^19.2.14",
     "@types/jasmine": "~5.1.0",

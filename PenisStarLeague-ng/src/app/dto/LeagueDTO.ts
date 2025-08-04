@@ -1,4 +1,5 @@
 import { Game } from "../model/Game";
+import { LeagueEventDTO } from "./LeagueEventDTO";
 
 export class LeagueDTO {
     public idLeague: number | undefined;
@@ -12,4 +13,5 @@ export class LeagueDTO {
     public description: string | undefined
     public users: any[] = []; 
     public games: Game[] = [];
+    public events: LeagueEventDTO[] = [] 
 }

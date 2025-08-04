@@ -1,32 +1,15 @@
 <mat-card class="league-card" appearance="outlined">
   <mat-card-header
     style="display: flex; justify-content: space-between; align-items: center">
-    <mat-card-title>{{ event?.event }}</mat-card-title>
+    <mat-card-title>{{ eventCard?.event }}</mat-card-title>
   </mat-card-header>
   <br>
   <mat-card-content>
-    <h2>League: {{ event?.league }}</h2>
-    <h2>Playing: {{ event?.game }}</h2>
-    <h2>Description: {{event?.description}}</h2>
-    <div *ngIf="event?.isReaccuring === 'Y'; else reaccuring">
-        <div *ngIf="event?.eventInterval === 'Yearly'">
-            <div>Every {{event?.month}} {{event?.day}}</div> 
-        </div>
-        <div *ngIf="event?.eventInterval === 'Monthly'">
-            <div>Every {{event?.day}} of the Month</div> 
-        </div>
-        <div *ngIf="event?.eventInterval === 'Weekly'">
-            <div>Every {{event?.weekDay}}</div> 
-        </div>
+    <h2>League: {{ eventCard?.league }}</h2>
+    <h2>Playing: {{ eventCard?.game }}</h2>
+    <h2>Description: {{eventCard?.description}}</h2>
+    <h2>{{eventCard?.occurring}}</h2>
 
-    </div>
-    <ng-template #reaccuring>
-       <div>On {{event?.month}} {{event?.day}}, {{event?.year}}</div> 
-    </ng-template>
-
-    <span>
-        &#64; {{event?.hour}}:{{event?.minute}} {{event?.amPm}}
-    </span>
   </mat-card-content>
   <mat-card-footer class="example-card-footer"> </mat-card-footer>
 </mat-card>

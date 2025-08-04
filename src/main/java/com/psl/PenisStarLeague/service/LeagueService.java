@@ -1,8 +1,9 @@
 package com.psl.PenisStarLeague.service;
 
-import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -61,7 +62,7 @@ public class LeagueService {
             UserLeague userLeague = new UserLeague();
             userLeague.setUser(userRepository.getReferenceById(idUser));
             userLeague.setLeaguePosition(leaguePosition);
-            userLeague.setJoinDate(new Date());
+            userLeague.setJoinDate(Instant.now());
 
             for (int idGame : createLeagueDTO.idGames()) {
                 GameLeague gameLeague = new GameLeague();
@@ -141,7 +142,7 @@ public class LeagueService {
                 }
 
                 if (userLeague.getJoinDate() != null) { // format join date
-                    joinDate = sdf.format(userLeague.getJoinDate());
+                    joinDate = sdf.format(Date.from(userLeague.getJoinDate()));
                 }
 
                 UserLeagueDTO userLeagueDTO = new UserLeagueDTO(userLeague.getUser().getIdUser(),
@@ -268,7 +269,7 @@ public class LeagueService {
                     return false; // bad but this is my fault
                 }
                 userLeague.setLeaguePosition(leaguePosition);
-                userLeague.setJoinDate(new Date());
+                userLeague.setJoinDate(Instant.now());
 
             }
             userLeagueRepository.save(userLeague);

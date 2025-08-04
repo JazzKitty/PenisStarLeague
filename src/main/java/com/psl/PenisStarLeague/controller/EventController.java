@@ -1,7 +1,9 @@
 package com.psl.PenisStarLeague.controller;
 
-import java.net.Authenticator;
+import java.time.Instant;
 import java.util.List;
+import java.util.Set;
+import java.util.TimeZone;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,16 +12,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.core.Authentication;
 
+import com.psl.PenisStarLeague.dto.CalenderEventDTO;
 import com.psl.PenisStarLeague.dto.CreateEventDTO;
 import com.psl.PenisStarLeague.dto.EventCardDTO;
-import com.psl.PenisStarLeague.model.Event;
 import com.psl.PenisStarLeague.model.dictionary.EventIntervalType;
 import com.psl.PenisStarLeague.model.dictionary.Month;
 import com.psl.PenisStarLeague.model.dictionary.Week;
 import com.psl.PenisStarLeague.service.EventService;
 import com.psl.PenisStarLeague.service.UserService;
+import com.psl.PenisStarLeague.util.PSLUtil;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -53,11 +58,16 @@ public class EventController {
         }
     }
 
-    @GetMapping("/getEventCards")
-    public ResponseEntity<List<EventCardDTO>> getEventCards(Authentication authentication){
+    @GetMapping("/getCalenderEvents")
+    public ResponseEntity<List<CalenderEventDTO>> getCalenderEvents(Authentication authentication, TimeZone timeZone, @RequestParam Instant startDate, @RequestParam Instant endDate){
         int idUser = userService.getIdUser(authentication);
-        return ResponseEntity.ok(eventService.getEventCards(idUser));
+        return ResponseEntity.ok(eventService.getCalenderEvents(idUser, startDate, endDate, timeZone));
+    }
+
+    @GetMapping("/getEventCards")
+    public ResponseEntity<List<EventCardDTO>> getEventCards(Authentication authentication, TimeZone timeZone, @RequestParam String idEvents){
+        int idUser = userService.getIdUser(authentication);
+        return ResponseEntity.ok(eventService.getEventCards(PSLUtil.stringToSet(idEvents, ","), idUser, timeZone));
     }
     
-
 }

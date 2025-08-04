@@ -61,10 +61,16 @@
                 </div>
 
             </div>
-            <div class="column" style="flex: 2">
+            <div class="column" style="flex: 1">
                 <h2>Member(s)</h2>
                 <ag-grid-angular [columnDefs]="memberColDef" [gridOptions]="gridOptions" style="width: inherit; height: 500px;" [theme]="theme"
                     [rowData]="league?.users">
+                </ag-grid-angular>
+            </div>
+                <div class="column" style="flex: 1">
+                <h2>Events(s)</h2>
+                <ag-grid-angular [columnDefs]="eventColDef" [gridOptions]="gridOptions" style="width: inherit; height: 500px;" [theme]="theme"
+                    [rowData]="league?.events">
                 </ag-grid-angular>
             </div>
         </div>

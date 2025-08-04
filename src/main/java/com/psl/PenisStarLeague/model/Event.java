@@ -1,9 +1,8 @@
 package com.psl.PenisStarLeague.model;
-import java.sql.Date;
+import java.time.Instant;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.psl.PenisStarLeague.model.dictionary.EventIntervalType;
-import com.psl.PenisStarLeague.model.dictionary.Month;
-import com.psl.PenisStarLeague.model.dictionary.Week;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -28,14 +27,11 @@ public class Event {
     private String event; // name of event 
     private String description; 
     private String isReaccuring; 
-    private Integer minute;
-    private Integer hour;
-    private Integer day;
-    private Integer year; 
-    private String amPm; 
+    private Instant date; 
 
     @ManyToOne
     @JoinColumn(name = "idLeague", nullable = false)
+    @JsonIgnore
     private League league; 
 
     @ManyToOne
@@ -45,13 +41,5 @@ public class Event {
     @ManyToOne
     @JoinColumn(name = "idEventIntervalType", nullable = true)
     private EventIntervalType eventIntervalType; 
-
-    @ManyToOne
-    @JoinColumn(name = "idMonth", nullable = true)
-    private Month month;
-
-    @ManyToOne
-    @JoinColumn(name = "idWeek", nullable = true)
-    private Week week;
 
 }
