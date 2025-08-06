@@ -12,6 +12,7 @@ import { AppService } from '../../../app.service';
 import { BehaviorSubject } from 'rxjs';
 import { Game } from '../../../model/Game';
 import { EditAutocompleteDialog } from '../../shared/edit-autocomplete-dialog/edit-autocomplete-dialog';
+import { NewEventComponent } from '../../events/new-event-component/new-event-component';
 
 @Component({
     selector: 'app-league',
@@ -22,6 +23,7 @@ import { EditAutocompleteDialog } from '../../shared/edit-autocomplete-dialog/ed
 export class LeagueComponent {
     public league: LeagueDTO | undefined;
     public memberColDef: ColDef[] | undefined;
+    public pendingMemberColDef: ColDef[] | undefined; 
     public eventColDef: ColDef[] | undefined;
 
     public gridOptions: any; 
@@ -29,12 +31,12 @@ export class LeagueComponent {
     protected readonly faTrash = faTrash;
 
     public readonly theme = themeQuartz.withParams({
-        backgroundColor: '#424242',
-        foregroundColor: '#424242',
+        backgroundColor: '#4E4E4E',
+        foregroundColor: '#7EB900',
         headerTextColor: '#FFFFFF',
         headerBackgroundColor: '#424242',
-        oddRowBackgroundColor: '#7eb900',
-        headerColumnResizeHandleColor: 'rgb(126, 46, 132)',
+        oddRowBackgroundColor: '#424242',
+        headerColumnResizeHandleColor: '#7EB900',
         cellTextColor: '#FFFFFF',
     });
 
@@ -67,13 +69,17 @@ export class LeagueComponent {
 
     setUpColDef() {
 
-
         this.memberColDef = [
             { field: 'userName', flex: 1},
             { field: 'gamerTag', flex: 1 },
             { field: 'joinDate', flex: 1 },
             { field: 'bio', flex: 2},
-            { field: 'joined', flex: 1, hide: this.league?.isOwner !== 'Y'}
+        ];
+
+        this.pendingMemberColDef = [
+            { field: 'userName', flex: 1},
+            { field: 'gamerTag', flex: 1 },
+            { field: 'bio', flex: 2},
         ];
 
         this.eventColDef = [
@@ -82,7 +88,9 @@ export class LeagueComponent {
         ]
 
         this.gridOptions = {
-
+            rowSelection: { 
+                mode: 'multiRow' 
+            },
         }
     }
 
@@ -110,6 +118,11 @@ export class LeagueComponent {
     requestToJoin(){
         if(this.league?.idLeague)
             this.leagueService.requestToJoin(this.league?.idLeague)
+    }
+
+    newEvent() {
+        let newEventDialog = this.dialogRef.open(NewEventComponent);
+        newEventDialog.componentInstance.event.idLeague = this.league?.idLeague; 
     }
 
     editTitle() {

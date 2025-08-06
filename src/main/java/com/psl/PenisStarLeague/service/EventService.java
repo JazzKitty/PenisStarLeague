@@ -1,23 +1,16 @@
 
 package com.psl.PenisStarLeague.service;
 
-import java.text.DecimalFormat;
 import java.time.DayOfWeek;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.OffsetDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-import java.time.format.TextStyle;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
 
-import org.checkerframework.checker.units.qual.min;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -129,31 +122,22 @@ public class EventService {
 
         for (Event event : events) {
             ZonedDateTime zonedDateTime = event.getDate().atZone(id);
-            DecimalFormat df = new DecimalFormat("00");
 
             if (event.getEventIntervalType() == null) {
-                occursStr = "Occurs on " + zonedDateTime.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH) + " "
-                        + zonedDateTime.getDayOfMonth() + ", " + zonedDateTime.getYear() + " at "
-                        + zonedDateTime.getHour() + ":" + zonedDateTime.getMinute();
+                occursStr = "Occurs on " + PSLUtil.getDateString(zonedDateTime);
             } else {
                 switch (event.getEventIntervalType().getIntervalType()) {
                     case "Yearly":
-                        occursStr = "Occurs yearly on "
-                                + zonedDateTime.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH) + " "
-                                + zonedDateTime.getDayOfMonth()+ PSLUtil.getPlaceString(zonedDateTime.getDayOfMonth()) + " at " + zonedDateTime.getHour() + ":"
-                                + df.format(zonedDateTime.getMinute());
+                        occursStr = "Occurs yearly on " + PSLUtil.getYearlyString(zonedDateTime);
                         break;
                     case "Monthly":
-                        occursStr = "Occurs Monthly on the " + zonedDateTime.getDayOfMonth() + PSLUtil.getPlaceString(zonedDateTime.getDayOfMonth())  +" at "
-                                + zonedDateTime.getHour() + ":" + df.format(zonedDateTime.getMinute());
+                        occursStr = "Occurs Monthly on the " + PSLUtil.getMonthlyString(zonedDateTime);
                         break;
                     case "Weekly":
-                        occursStr = "Occurs Weekly every "
-                                + zonedDateTime.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH) + " at "
-                                + zonedDateTime.getHour() + ":" + df.format(zonedDateTime.getMinute());
+                        occursStr = "Occurs Weekly every " + PSLUtil.getWeeklyString(zonedDateTime);
                         break;
                     case "Daily":
-                        occursStr = "Occurs Daily at " + zonedDateTime.getHour() + ":" + df.format(zonedDateTime.getMinute());
+                        occursStr = "Occurs Daily at " + PSLUtil.getTimeString(zonedDateTime.getHour(), zonedDateTime.getHour());
                         break;
                 }
             }

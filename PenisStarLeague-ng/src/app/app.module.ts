@@ -55,7 +55,7 @@ import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import {MatTimepickerModule} from '@angular/material/timepicker'; 
 import { EventCardComponent } from './components/events/event-card-component/event-card-component'
-
+ import {MatTabsModule} from '@angular/material/tabs'; 
 // Register all Community features
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -110,6 +110,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     AgGridAngular,
     MatDatepickerModule,
     MatTimepickerModule,
+    MatTabsModule,
     CalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory,

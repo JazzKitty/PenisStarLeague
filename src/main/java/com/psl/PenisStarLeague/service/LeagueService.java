@@ -2,11 +2,13 @@ package com.psl.PenisStarLeague.service;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TimeZone;
 
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
@@ -16,20 +18,24 @@ import com.psl.PenisStarLeague.dto.CreateLeagueDTO;
 import com.psl.PenisStarLeague.dto.LeagueCardDTO;
 import com.psl.PenisStarLeague.dto.LeagueDTO;
 import com.psl.PenisStarLeague.dto.LeagueDictDTO;
+import com.psl.PenisStarLeague.dto.LeagueEventDTO;
+import com.psl.PenisStarLeague.dto.PendingUserLeagueDTO;
 import com.psl.PenisStarLeague.dto.UserLeagueDTO;
+import com.psl.PenisStarLeague.model.Event;
 import com.psl.PenisStarLeague.model.Game;
 import com.psl.PenisStarLeague.model.GameLeague;
 import com.psl.PenisStarLeague.model.League;
+import com.psl.PenisStarLeague.model.PSLUser;
 import com.psl.PenisStarLeague.model.UserLeague;
 import com.psl.PenisStarLeague.model.dictionary.LeaguePosition;
 import com.psl.PenisStarLeague.model.dictionary.LeagueType;
-import com.psl.PenisStarLeague.repo.GameLeagueRepository;
 import com.psl.PenisStarLeague.repo.GameRepository;
 import com.psl.PenisStarLeague.repo.LeaguePositionRepository;
 import com.psl.PenisStarLeague.repo.LeagueRepository;
 import com.psl.PenisStarLeague.repo.LeagueTypeRepository;
 import com.psl.PenisStarLeague.repo.UserLeagueRepository;
 import com.psl.PenisStarLeague.repo.UserRepository;
+import com.psl.PenisStarLeague.util.PSLUtil;
 
 @Service
 @Slf4j
@@ -41,7 +47,6 @@ public class LeagueService {
     private final UserRepository userRepository;
     private final UserLeagueRepository userLeagueRepository;
     private final GameRepository gameRepository;
-    private final GameLeagueRepository gameLeagueRepository;
 
     public List<LeagueType> getLeagueTypes() {
         return leagueTypeRepository.findAll();
@@ -90,7 +95,7 @@ public class LeagueService {
      * @return
      */
     public LeagueDTO getLeague(int idLeague) {
-        return getLeague(idLeague, -1);
+        return getLeague(idLeague, -1, null);
     }
 
     /**
@@ -100,8 +105,10 @@ public class LeagueService {
      * @param idUser
      * @return
      */
-    public LeagueDTO getLeague(int idLeague, int idUser) {
+    public LeagueDTO getLeague(int idLeague, int idUser, TimeZone timeZone) {
         League league = leagueRepository.findByIdLeague(idLeague).orElse(null);
+
+
         if (league == null) {
             return null;
         } else {
@@ -111,33 +118,37 @@ public class LeagueService {
             String userPending = "N";
             int memberCount = 0;
             Set<UserLeagueDTO> users = new HashSet<>();
+            Set<PendingUserLeagueDTO> pendingUsers = new HashSet<>();
 
             SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/YYYY");
 
             for (UserLeague userLeague : league.getUserLeagues()) {
                 String userPosition = userLeague.getLeaguePosition().getCode();
                 String joinDate = "";
-                String isPending = "N";
+                PSLUser user = userLeague.getUser();
 
                 if (userPosition.equals("OWN")) {
                     // Grab owner name
                     owner = userLeague.getUser().getUserName();
-                    if (userLeague.getUser().getIdUser() == idUser) {
+                    if (user.getIdUser() == idUser) {
                         isOwner = "Y"; // the person that made this request is the owner
+                        continue; 
                     }
                 }
 
                 if (!userPosition.equals("PND")) {
                     memberCount++; // all none pending users are members
-                    if (userLeague.getUser().getIdUser() == idUser) {
+                    if (user.getIdUser() == idUser) {
                         // user that requested the league is a member...
                         isMember = "Y";
                     }
                 } else { // User is pending
-                    isPending = "Y";
-                    if (userLeague.getUser().getIdUser() == idUser) {
+                    if (user.getIdUser() == idUser) {
                         // user that requested the league is a pending...
                         userPending = "Y";
+                        pendingUsers.add(new PendingUserLeagueDTO(user.getIdUser(),
+                            user.getUserName(), user.getGamerTag(), user.getBio()));
+                            continue; // only add to pending user list. 
                     }
                 }
 
@@ -145,8 +156,8 @@ public class LeagueService {
                     joinDate = sdf.format(Date.from(userLeague.getJoinDate()));
                 }
 
-                UserLeagueDTO userLeagueDTO = new UserLeagueDTO(userLeague.getUser().getIdUser(),
-                        userLeague.getUser().getUserName(), userLeague.getUser().getGamerTag(), joinDate, isPending);
+                UserLeagueDTO userLeagueDTO = new UserLeagueDTO(user.getIdUser(),
+                        user.getUserName(), user.getGamerTag(), user.getBio(), joinDate);
                 users.add(userLeagueDTO);
             }
 
@@ -156,24 +167,37 @@ public class LeagueService {
                 games.add(gameLeague.getGame());
             }
 
+            // Grab events 
+            Set<LeagueEventDTO> events = new HashSet<>();
+            for(Event event: league.getEvents()){
+                events.add(new LeagueEventDTO(event.getIdEvent(), event.getEvent(), getLeagueEventStr(event, timeZone)));                
+            }
+
             LeagueDTO leagueDTO;
 
             if (league.getLeagueType().getCode().equals("PRIV")) { // League is private
                 if (isMember.equals("N")) { // League is private and user is not a member do not show the list of user
                                             // or event
                     leagueDTO = new LeagueDTO(idLeague, league.getLeague(), owner, isOwner, isMember, "Y", userPending,
-                            memberCount,
-                            league.getDescription(), null, games);
+                            memberCount, league.getDescription(), new HashSet<>(), new HashSet<>(), games, new HashSet<>());
                 } else { // League is private but user is a member so show them everything
-                    leagueDTO = new LeagueDTO(idLeague, league.getLeague(), owner, isOwner, isMember, "Y", userPending,
-                            memberCount,
-                            league.getDescription(), users, games);
+                    if(isOwner.equals('Y')){
+                        leagueDTO = new LeagueDTO(idLeague, league.getLeague(), owner, isOwner, isMember, "Y", userPending,
+                            memberCount, league.getDescription(), users, pendingUsers, games, events);
+                    }else{
+                        leagueDTO = new LeagueDTO(idLeague, league.getLeague(), owner, isOwner, isMember, "Y", userPending,
+                            memberCount, league.getDescription(), users, new HashSet<>(), games, events);
+                    }
                 }
             } else { // Public league so show the user everything no matter what
-                leagueDTO = new LeagueDTO(idLeague, league.getLeague(), owner, isOwner, isMember, "N", "N", memberCount,
-                        league.getDescription(), users, games);
+                if(isOwner.equals('Y')){
+                    leagueDTO = new LeagueDTO(idLeague, league.getLeague(), owner, isOwner, isMember, "Y", userPending,
+                        memberCount, league.getDescription(), users, pendingUsers, games, events);
+                }else{
+                    leagueDTO = new LeagueDTO(idLeague, league.getLeague(), owner, isOwner, isMember, "Y", userPending,
+                        memberCount, league.getDescription(), users, new HashSet<>(), games, events);
+                }
             }
-
             return leagueDTO;
         }
     }
@@ -278,4 +302,58 @@ public class LeagueService {
 
     }
 
+    /**
+     * remove member from league 
+     * @param idOwner idOwner (the person who should of made this request)
+     * @param idLeague id of the league to remove the user from 
+     * @param idMember id of the meember to remove
+     * @return
+     */
+    public boolean removeMember(int idOwner, int idLeague, int idMember){
+        int status = userLeagueRepository.removeMember(idLeague, idMember, idOwner);
+        return true; 
+    }
+
+    /**
+     * remove member from league 
+     * @param idOwner idOwner (the person who should of made this request)
+     * @param idLeague id of the league to remove the user from 
+     * @param idMember id of the meember to remove
+     * @return
+     */
+    public boolean addMember(int idOwner, int idLeague, int idMember){
+        int status = userLeagueRepository.addMember(idLeague, idMember, idOwner);
+        return true; 
+    }
+
+    /**
+     * 
+     * @param event
+     * @param timeZone
+     * @return
+     */
+    private static String getLeagueEventStr(Event event, TimeZone timeZone){
+        ZonedDateTime zonedDateTime = event.getDate().atZone(PSLUtil.getIdZone(timeZone));
+        String occursStr = "";
+
+        if (event.getEventIntervalType() == null) {
+            occursStr = "Occurs on " + PSLUtil.getDateString(zonedDateTime);
+        } else {
+            switch (event.getEventIntervalType().getIntervalType()) {
+                case "Yearly":
+                    occursStr = "Yearly on " + PSLUtil.getYearlyString(zonedDateTime);
+                    break;
+                case "Monthly":
+                    occursStr = "Monthly on the " + PSLUtil.getMonthlyString(zonedDateTime);
+                    break;
+                case "Weekly":
+                    occursStr = "Weekly every " + PSLUtil.getWeeklyString(zonedDateTime);
+                    break;
+                case "Daily":
+                    occursStr = "Daily at " + PSLUtil.getTimeString(zonedDateTime.getHour(), zonedDateTime.getHour());
+                    break;
+            }
+        }
+        return occursStr; 
+    }
 }

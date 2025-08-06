@@ -70,6 +70,7 @@ public interface LeagueRepository extends JpaRepository<League, Integer> {
         join fetch l.userLeagues ul 
         join fetch ul.user u
         join fetch l.leagueType lt 
+        join fetch l.events e 
         WHERE l.idLeague = :idLeague
         """)
     Optional<League> findByIdLeague(@Param("idLeague") Integer idLeague);

@@ -6,6 +6,7 @@ spring:
     oauth2:
       resourceserver:
         opaque-token:
+          redirectUri: https://penisstarleague.com
           introspection-uri: https://www.googleapis.com/
           clientId: ${GOOGLE_OAUTH_CLIENT_ID}
           clientSecret: ${GOOGLE_OAUTH_CLIENT_SECRET}
@@ -21,8 +22,6 @@ spring:
       naming:
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-
-
     properties:
       hibernate: 
         dialect: org.hibernate.dialect.MySQLDialect

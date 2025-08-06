@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.List;
 import java.util.Set;
+import java.util.TimeZone;
 
 import org.apache.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,12 +47,12 @@ public class LeagueController {
     }
 
     @GetMapping("/public/getLeague")
-    public ResponseEntity<LeagueDTO> getLeague(Authentication authentication, @RequestParam Integer idLeague) {
+    public ResponseEntity<LeagueDTO> getLeague(Authentication authentication, TimeZone timeZone, @RequestParam Integer idLeague) {
         LeagueDTO league; 
         if(authentication!=null){
             try{
                 int idUser = userService.getIdUser(authentication); 
-                league = leagueService.getLeague(idLeague, idUser);
+                league = leagueService.getLeague(idLeague, idUser, timeZone);
             }catch(UsernameNotFoundException e){
                 return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).build(); // no permisions 
             }
@@ -141,4 +142,26 @@ public class LeagueController {
         }
     }
 
+    @PostMapping("/addMember")
+    public ResponseEntity<Void> addMember(Authentication authentication, @RequestParam Integer idLeague, @RequestParam Integer idMember) {
+        int idOwner = userService.getIdUser(authentication); //if you are making this request you SHOULD be the owner of the league. This will be checked later...
+        boolean added = leagueService.addMember(idOwner, idLeague, idMember);
+        if(added){
+            return ResponseEntity.status(HttpStatus.SC_CREATED).build();
+        }else{
+            return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).build();
+        }
+    }
+
+    @DeleteMapping("/removeMember")
+    public ResponseEntity<Void> removeMember(Authentication authentication, @RequestParam Integer idLeague, @RequestParam Integer idMember) {
+        int idOwner = userService.getIdUser(authentication); //if you are making this request you SHOULD be the owner of the league. This will be checked later...
+        boolean added = leagueService.removeMember(idOwner, idLeague, idMember);
+        if(added){
+            return ResponseEntity.status(HttpStatus.SC_CREATED).build();
+        }else{
+            return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).build();
+        }
+    }
+    
 }

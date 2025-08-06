@@ -12,6 +12,7 @@ export class LeagueDTO {
     public memberCount: string | undefined;
     public description: string | undefined
     public users: any[] = []; 
+    public pendingUsers: any[] = []; 
     public games: Game[] = [];
     public events: LeagueEventDTO[] = [] 
 }

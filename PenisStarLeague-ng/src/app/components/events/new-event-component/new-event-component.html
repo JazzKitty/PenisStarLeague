@@ -19,15 +19,9 @@
                 <mat-label>Event Name</mat-label>
                 <input matInput [(ngModel)]="event.event" name="eventname" />
             </mat-form-field>
-
-            <app-autocomplete-component [valueSub]='ownedLeaguesSub' id='idLeague' display='league'
-                [(value)]="event.idLeague" title="Select a League">
-            </app-autocomplete-component>
-
             <app-autocomplete-component [valueSub]='gameDictSub' id='idGame' display='game' [(value)]="event.idGame"
                 title="Select a Game">
             </app-autocomplete-component>
-
         </div>
         <mat-form-field style="width: inherit">
             <mat-label>Description</mat-label>

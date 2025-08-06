@@ -14,6 +14,8 @@ public record LeagueDTO(int idLeague,
         int memberCount,
         String description,
         Set<UserLeagueDTO> users,
-        Set<Game> games) {
+        Set<PendingUserLeagueDTO> pendingUsers,
+        Set<Game> games,
+        Set<LeagueEventDTO> events) {
 
 }

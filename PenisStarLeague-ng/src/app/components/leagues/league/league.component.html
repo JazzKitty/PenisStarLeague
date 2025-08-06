@@ -62,14 +62,45 @@
 
             </div>
             <div class="column" style="flex: 1">
+
                 <h2>Member(s)</h2>
-                <ag-grid-angular [columnDefs]="memberColDef" [gridOptions]="gridOptions" style="width: inherit; height: 500px;" [theme]="theme"
-                    [rowData]="league?.users">
-                </ag-grid-angular>
+                <ng-container *ngIf="league?.isOwner === 'Y'; else notOwner">
+                    <mat-tab-group dynamicHeight>
+                        <mat-tab label="Members">
+                            <ag-grid-angular [columnDefs]="memberColDef" [gridOptions]="gridOptions" style="width: inherit; height: 450px;" [theme]="theme"
+                                [rowData]="league?.users">
+                            </ag-grid-angular> 
+                            <br>
+                            <button mat-button style="background: red;" extended (click)="newEvent()">
+                                Remove Selected
+                            </button>
+                        </mat-tab>
+                        <mat-tab label="Requested" style="display: flex;"> 
+                            <ag-grid-angular [columnDefs]="pendingMemberColDef" [gridOptions]="gridOptions" style="width: inherit; height: 450px;" [theme]="theme"
+                                [rowData]="league?.pendingUsers">
+                            </ag-grid-angular> 
+                            <br>
+                            <button mat-button  class="green-color" (click)="newEvent()">
+                                Approve Selected
+                            </button>
+                        </mat-tab>
+                    </mat-tab-group>
+                </ng-container>
+                <ng-template #notOwner>
+                    <ag-grid-angular [columnDefs]="memberColDef" style="width: inherit; height: 500px;" [theme]="theme"
+                        [rowData]="league?.users">
+                    </ag-grid-angular>
+                </ng-template>
+
             </div>
-                <div class="column" style="flex: 1">
-                <h2>Events(s)</h2>
-                <ag-grid-angular [columnDefs]="eventColDef" [gridOptions]="gridOptions" style="width: inherit; height: 500px;" [theme]="theme"
+            <div class="column" style="flex: 1">
+                <div style="display: flex; justify-content: space-between; align-items: center; ">
+                    <h2>Event(s)</h2>
+                    <button mat-button *ngIf="league?.isOwner === 'Y'" class="green-color" extended (click)="newEvent()">
+                        Add Event
+                    </button>
+                </div>
+                <ag-grid-angular [columnDefs]="eventColDef" style="width: inherit; height: 500px;" [theme]="theme"
                     [rowData]="league?.events">
                 </ag-grid-angular>
             </div>

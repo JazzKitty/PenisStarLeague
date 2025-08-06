@@ -1,7 +1,11 @@
 package com.psl.PenisStarLeague.util;
 
+import java.text.DecimalFormat;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.TextStyle;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
 
@@ -42,6 +46,43 @@ public class PSLUtil {
         }else{
             return "th"; 
         }
+    }
+
+    public static String getTimeString(int hour, int min){
+        DecimalFormat df = new DecimalFormat("00");
+        if(hour == 0){
+            return "12:" + df.format(min) + "AM";
+        }else if(hour > 0 && hour < 11){
+            return hour + ":" + df.format(min) + "AM";
+        }else if(hour == 12){
+            return "12:" + df.format(min) + "PM"; 
+        }else if(hour < 24){
+            return (hour - 12) + ":" + df.format(min) + "PM";
+        }else{
+            return "N/A";
+        }
+    }
+
+    public static String getYearlyString(ZonedDateTime zonedDateTime){
+        return zonedDateTime.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH) + " " + zonedDateTime.getDayOfMonth() 
+            + PSLUtil.getPlaceString(zonedDateTime.getDayOfMonth()) + " at " + getTimeString(zonedDateTime.getHour(), zonedDateTime.getMinute());
+    }
+
+    public static String getMonthlyString(ZonedDateTime zonedDateTime){
+        return zonedDateTime.getDayOfMonth() + PSLUtil.getPlaceString(zonedDateTime.getDayOfMonth()) + " at "
+            + getTimeString(zonedDateTime.getHour(), zonedDateTime.getMinute());
+
+    }
+    
+    public static String getWeeklyString(ZonedDateTime zonedDateTime){
+        return zonedDateTime.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH) + " at "
+            + getTimeString(zonedDateTime.getHour(), zonedDateTime.getMinute());
+    }
+
+    public static String getDateString(ZonedDateTime zonedDateTime){
+        return zonedDateTime.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH) + " "
+            + zonedDateTime.getDayOfMonth() + ", " + zonedDateTime.getYear() + " at " 
+            + getTimeString(zonedDateTime.getHour(), zonedDateTime.getMinute());
     }
 
 }

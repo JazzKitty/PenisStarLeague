@@ -34,7 +34,7 @@ public class League {
         userLeague.setLeague(this);
     }
 
-    @OneToMany(mappedBy = "event")
+    @OneToMany(mappedBy = "league", cascade = CascadeType.ALL)
     private Set<Event> events;
 
     public void addNewEvent(Event event){
