@@ -3,5 +3,6 @@ export class CalenderEventDTO {
     public idLeague: string | undefined;
     public name: string | undefined;
     public instant: Date | undefined;
+    public interval: string | undefined; 
 }
 

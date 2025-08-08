@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LeagueService } from '../league.service';
 import { LeagueDTO } from '../../../dto/LeagueDTO';
-import { ColDef, themeQuartz } from 'ag-grid-community';
+import { ColDef, GridApi, GridReadyEvent, themeQuartz } from 'ag-grid-community';
 import { faPencil, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { ComfirmationDialogComponent } from '../../shared/comfirmation-dialog.component/comfirmation-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -26,9 +26,15 @@ export class LeagueComponent {
     public pendingMemberColDef: ColDef[] | undefined; 
     public eventColDef: ColDef[] | undefined;
 
+    public memberColApi: GridApi | undefined;
+    public pendingMemberColApi: GridApi | undefined;
+
     public gridOptions: any; 
     protected readonly faPencil = faPencil;
     protected readonly faTrash = faTrash;
+
+    public selectedMembersToAdd: any[] | undefined = [];
+    public selectedMembersToRemoved: any[] | undefined = []; 
 
     public readonly theme = themeQuartz.withParams({
         backgroundColor: '#4E4E4E',
@@ -118,6 +124,42 @@ export class LeagueComponent {
     requestToJoin(){
         if(this.league?.idLeague)
             this.leagueService.requestToJoin(this.league?.idLeague)
+    }
+
+    addMember(){
+        if(this.league?.idLeague && this.selectedMembersToAdd){
+            let idMembers: number[] = [];
+            this.selectedMembersToAdd.forEach(value =>{
+                idMembers.push(value.idUser);
+            })
+            this.leagueService.addMember(this.league.idLeague, idMembers);
+        }      
+    }
+
+    removeMember(){
+        if(this.league?.idLeague && this.selectedMembersToRemoved){
+            let idMembers: number[] = [];
+            this.selectedMembersToRemoved.forEach(value =>{
+                idMembers.push(value.idUser);
+            });
+            this.leagueService.removeMember(this.league.idLeague, idMembers);
+        }
+    }
+
+    onMemberSelectionChange(){
+        this.selectedMembersToRemoved = this.memberColApi?.getSelectedRows();
+    }
+
+    onPendingMemberSelectionChange(){
+        this.selectedMembersToAdd = this.pendingMemberColApi?.getSelectedRows();
+    }
+
+    onMemberGridReady(gridReadyEvent: GridReadyEvent){
+        this.memberColApi = gridReadyEvent.api;
+    }
+
+    onPendingMemberGridReady(gridReadyEvent: GridReadyEvent){
+        this.pendingMemberColApi = gridReadyEvent.api;
     }
 
     newEvent() {

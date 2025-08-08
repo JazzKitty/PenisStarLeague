@@ -58,7 +58,7 @@ export class AppService {
         if(idUser == null){
             return;
         }
-        const headers = new HttpHeaders({ "Authorization": "Bearer " + this.tokenSub.value })
+        const headers = new HttpHeaders({ "Authorization": "Bearer " + this.tokenSub.value });
         let params = new HttpParams().set("userName", userName).set("gamerTag", gamerTag);
 
         return this.http.get<CreateUserDTO>(this.url + "createUserName", { headers: headers, params: params});
@@ -93,6 +93,36 @@ export class AppService {
         this.http.get<EventIntervalType[]>(this.url + "public/getEventIntervalTypes" ).subscribe(res => {
             this.eventIntervalTypeSub.next(res);
         })
+    }
+
+    editUserName(userName: string): Observable<any> | undefined {
+        if(!this.isLoggedIn){
+            return;
+        }
+        const headers = new HttpHeaders({ "Authorization": "Bearer " + this.tokenSub.value });
+        let params = new HttpParams().set("userName", userName)
+
+        return this.http.post(this.url + "editUserName",null, { headers: headers, params: params}); 
+    }
+
+    editGamerTag(gamerTag: string): Observable<any> | undefined {
+        if(!this.isLoggedIn){
+            return;
+        }
+        const headers = new HttpHeaders({ "Authorization": "Bearer " + this.tokenSub.value });
+        let params = new HttpParams().set("gamerTag", gamerTag)
+
+        return this.http.post(this.url + "editGamerTag", null,{ headers: headers, params: params}); 
+    }
+
+    editBio(bio: string): Observable<any> | undefined {
+        if(!this.isLoggedIn){
+            return;
+        }
+        const headers = new HttpHeaders({ "Authorization": "Bearer " + this.tokenSub.value });
+        let params = new HttpParams().set("bio", bio)
+
+        return this.http.post(this.url + "editBio", null,{ headers: headers, params: params}); 
     }
     
 }

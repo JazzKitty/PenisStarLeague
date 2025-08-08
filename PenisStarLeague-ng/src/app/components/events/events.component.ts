@@ -40,11 +40,30 @@ export class EventsComponent {
         this.eventService.calenderEventSub.subscribe(res => {
             this.events = [];
             res.forEach(value => {
-                if (value.name != undefined && value.instant != undefined) {
+                if (value.name != undefined && value.instant != undefined && value.interval != undefined) {
+                    let color; 
+                    switch (value.interval){
+                        case "single":
+                            color = {primary: '#5F939B' ,secondary: '#304B4F'}
+                            break;
+                        case "yearly":
+                            color = {primary: '#C343F0' ,secondary: '#842EA3'}
+                            break;
+                        case "monthly":
+                            color = {primary: '#43D9F0' ,secondary: '#2E94A3'}
+                                break;
+                        case "weekly": 
+                            color = {primary: '#F09043' ,secondary: '#A3632E'}
+                            break;
+                        case "daily":
+                            color = {primary: '#7EB900' ,secondary: '#4B6E00'}
+                            break;
+                    }
                     this.events.push({
                         title: value.name,
                         start: new Date(value.instant),
-                        id: value.idEvent
+                        id: value.idEvent,
+                        color: color
                     })
                 }
             });

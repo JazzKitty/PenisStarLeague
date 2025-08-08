@@ -6,7 +6,7 @@
         <div class="column" style="flex: 1">
             <div style="display: flex; justify-content: space-between;">
                 <div>
-                    <h2>UserName: </h2>
+                    <h2>User Name: {{user?.userName}}</h2>
                 </div>
                 <button (click)="editUserName()" mat-button
                     style="width: 40px; height: 40px;">
@@ -18,7 +18,7 @@
         <div class="column" style="flex: 1">
             <div style="display: flex; justify-content: space-between;">
                 <div>
-                    <h2>GamerTag: </h2>
+                    <h2>GamerTag: {{user?.gamerTag}}</h2>
                 </div>
                 <button (click)="editGamerTag()" mat-button
                     style="width: 40px; height: 40px;">
@@ -34,6 +34,8 @@
                 <mat-form-field style="width: 100%">
                 <mat-label>Bio</mat-label>
                 <textarea
+                    [value]="user?.bio"
+                    disabled=true
                     matInput
                     maxlength="200"
                     cdkTextareaAutosize
@@ -50,5 +52,4 @@
             </div>
         </div>
     </div>
-
 </div>

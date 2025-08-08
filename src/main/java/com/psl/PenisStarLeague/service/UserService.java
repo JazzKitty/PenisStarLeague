@@ -62,4 +62,64 @@ public class UserService   {
         }
 
     }
+
+    /** 
+     * return true if user name was able to be created for user
+     */
+    public boolean editUserName(String userName, int idUser){
+        if(userRepository.findByUserName(userName).orElse(null) == null){
+            PSLUser user = userRepository.findByIdUser(idUser).orElse(null);
+            if(user == null){
+                return false;
+            }   
+            
+            user.setUserName(userName);
+
+            if(userRepository.save(user)!=null){
+                return true; 
+            }
+
+            return false;
+        }else{
+            return false; // userName already exists 
+        }
+
+    }
+
+    
+    /** 
+     * return true if user name was able to be created for user
+     */
+    public boolean editGamerTag(String gamerTag, int idUser){
+        PSLUser user = userRepository.findByIdUser(idUser).orElse(null);
+        if(user == null){
+            return false;
+        }   
+        
+        user.setGamerTag(gamerTag);
+
+        if(userRepository.save(user)!=null){
+            return true; 
+        }
+
+        return false;
+    }
+
+        /** 
+     * return true if user name was able to be created for user
+     */
+    public boolean editBio(String bio, int idUser){
+        PSLUser user = userRepository.findByIdUser(idUser).orElse(null);
+        if(user == null){
+            return false;
+        }   
+        
+        user.setBio(bio);
+
+        if(userRepository.save(user)!=null){
+            return true; 
+        }
+
+        return false;
+    }
 }

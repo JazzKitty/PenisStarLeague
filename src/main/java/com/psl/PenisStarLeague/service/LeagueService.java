@@ -108,98 +108,135 @@ public class LeagueService {
     public LeagueDTO getLeague(int idLeague, int idUser, TimeZone timeZone) {
         League league = leagueRepository.findByIdLeague(idLeague).orElse(null);
 
-
         if (league == null) {
             return null;
         } else {
-            String owner = "";
-            String isOwner = "N";
-            String isMember = "N";
-            String userPending = "N";
-            int memberCount = 0;
-            Set<UserLeagueDTO> users = new HashSet<>();
-            Set<PendingUserLeagueDTO> pendingUsers = new HashSet<>();
+            String userPositionCode = leaguePositionRepository.findByIdLeagueAndIdUser(idLeague, idUser).orElse(null);
+            String leagueTypeCode = league.getLeagueType().getCode();
+            if(userPositionCode == null || userPositionCode.isEmpty()){ // User is not part of the league and not 
+                if(leagueTypeCode.equals("PRIV")){
+                    return populateNonUserPrivateLeagueDTO(league, "");
+                }else{
+                    return populateUserOrPublicLeagueDTO(league, "", timeZone);
+                }
+            }else{
+                switch (userPositionCode) {
+                    case "USR":
+                        return populateUserOrPublicLeagueDTO(league, "USR", timeZone);
+                    case "OWN":
+                        return populateOwnerLeagueDTO(league, timeZone);
+                    case "PND":                
+                        return populateNonUserPrivateLeagueDTO(league, "PND");
+                }
+            }
 
-            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/YYYY");
+            return null;
+        }
+    }
 
-            for (UserLeague userLeague : league.getUserLeagues()) {
-                String userPosition = userLeague.getLeaguePosition().getCode();
-                String joinDate = "";
+    private static LeagueDTO populateNonUserPrivateLeagueDTO(League league, String leaguePosCode){
+        int memberCount = 0; 
+        String ownerName = "";
+        for(UserLeague userLeague: league.getUserLeagues()){
+            String userPosCode = userLeague.getLeaguePosition().getCode();
+            if(userPosCode.equals("OWN")){
+                ownerName = userLeague.getUser().getUserName();
+            }
+            
+            if(userPosCode.equals("USR")){
+                memberCount ++; 
+            }
+        } 
+
+        Set<Game> games = new HashSet<>();
+        for(GameLeague gameLeague: league.getGameLeagues()){
+            games.add(gameLeague.getGame());
+        }
+
+        return new LeagueDTO(league.getIdLeague(), league.getLeague(), ownerName, "Y", memberCount, league.getLeague(), leaguePosCode, null, null, games, null); 
+
+    }
+
+    private static LeagueDTO populateUserOrPublicLeagueDTO(League league, String leaguePosCode, TimeZone timeZone){
+        int memberCount = 0; 
+        String ownerName = "";
+        Set<UserLeagueDTO> userLeagueDTOs = new HashSet<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/YYYY");
+
+        for(UserLeague userLeague: league.getUserLeagues()){
+            String userPosCode = userLeague.getLeaguePosition().getCode();
+            if(userPosCode.equals("OWN")){
+                ownerName = userLeague.getUser().getUserName();
+            }
+            
+            if(userPosCode.equals("USR")){
+                memberCount ++; 
                 PSLUser user = userLeague.getUser();
-
-                if (userPosition.equals("OWN")) {
-                    // Grab owner name
-                    owner = userLeague.getUser().getUserName();
-                    if (user.getIdUser() == idUser) {
-                        isOwner = "Y"; // the person that made this request is the owner
-                        continue; 
-                    }
+                String joinDate = "";
+                if (userLeague.getJoinDate() != null) { // format join date
+                    joinDate = sdf.format(Date.from(userLeague.getJoinDate()));
                 }
 
-                if (!userPosition.equals("PND")) {
-                    memberCount++; // all none pending users are members
-                    if (user.getIdUser() == idUser) {
-                        // user that requested the league is a member...
-                        isMember = "Y";
-                    }
-                } else { // User is pending
-                    if (user.getIdUser() == idUser) {
-                        // user that requested the league is a pending...
-                        userPending = "Y";
-                        pendingUsers.add(new PendingUserLeagueDTO(user.getIdUser(),
-                            user.getUserName(), user.getGamerTag(), user.getBio()));
-                            continue; // only add to pending user list. 
-                    }
-                }
+                userLeagueDTOs.add(new UserLeagueDTO(user.getIdUser(), user.getUserName(), user.getGamerTag(), user.getBio(), joinDate));
+            }
+        } 
+
+        Set<Game> games = new HashSet<>();
+        for(GameLeague gameLeague: league.getGameLeagues()){
+            games.add(gameLeague.getGame());
+        }
+
+        Set<LeagueEventDTO> events = new HashSet<>();
+        for(Event event: league.getEvents()){
+            events.add(new LeagueEventDTO(event.getIdEvent(), event.getEvent(), getLeagueEventStr(event, timeZone)));
+        }
+
+        return new LeagueDTO(league.getIdLeague(), league.getLeague(), ownerName, "N", memberCount, league.getLeague(), leaguePosCode, userLeagueDTOs, null, games, events); 
+    }
+
+    private static LeagueDTO populateOwnerLeagueDTO(League league, TimeZone timeZone){
+        int memberCount = 0; 
+        String ownerName = "";
+        Set<UserLeagueDTO> userLeagueDTOs = new HashSet<>();
+        Set<PendingUserLeagueDTO> pendingUserLeagueDTOs = new HashSet<>();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/YYYY");
+
+        for(UserLeague userLeague: league.getUserLeagues()){
+            String userPosCode = userLeague.getLeaguePosition().getCode();
+
+            PSLUser user = userLeague.getUser();
+
+            if(userPosCode.equals("OWN")){
+                ownerName = userLeague.getUser().getUserName();
+
+            } else if(userPosCode.equals("USR")){
+                memberCount ++; 
+                String joinDate = "";
 
                 if (userLeague.getJoinDate() != null) { // format join date
                     joinDate = sdf.format(Date.from(userLeague.getJoinDate()));
                 }
 
-                UserLeagueDTO userLeagueDTO = new UserLeagueDTO(user.getIdUser(),
-                        user.getUserName(), user.getGamerTag(), user.getBio(), joinDate);
-                users.add(userLeagueDTO);
-            }
+                userLeagueDTOs.add(new UserLeagueDTO(user.getIdUser(), user.getUserName(), user.getGamerTag(), user.getBio(), joinDate));
 
-            //Grab games
-            Set<Game> games = new HashSet<>();
-            for(GameLeague gameLeague: league.getGameLeagues()){
-                games.add(gameLeague.getGame());
+            } else if(userPosCode.equals("PND")){
+                pendingUserLeagueDTOs.add(new PendingUserLeagueDTO(user.getIdUser(), user.getUserName(), user.getGamerTag(), user.getBio()));
             }
+        } 
 
-            // Grab events 
-            Set<LeagueEventDTO> events = new HashSet<>();
-            for(Event event: league.getEvents()){
-                events.add(new LeagueEventDTO(event.getIdEvent(), event.getEvent(), getLeagueEventStr(event, timeZone)));                
-            }
-
-            LeagueDTO leagueDTO;
-
-            if (league.getLeagueType().getCode().equals("PRIV")) { // League is private
-                if (isMember.equals("N")) { // League is private and user is not a member do not show the list of user
-                                            // or event
-                    leagueDTO = new LeagueDTO(idLeague, league.getLeague(), owner, isOwner, isMember, "Y", userPending,
-                            memberCount, league.getDescription(), new HashSet<>(), new HashSet<>(), games, new HashSet<>());
-                } else { // League is private but user is a member so show them everything
-                    if(isOwner.equals('Y')){
-                        leagueDTO = new LeagueDTO(idLeague, league.getLeague(), owner, isOwner, isMember, "Y", userPending,
-                            memberCount, league.getDescription(), users, pendingUsers, games, events);
-                    }else{
-                        leagueDTO = new LeagueDTO(idLeague, league.getLeague(), owner, isOwner, isMember, "Y", userPending,
-                            memberCount, league.getDescription(), users, new HashSet<>(), games, events);
-                    }
-                }
-            } else { // Public league so show the user everything no matter what
-                if(isOwner.equals('Y')){
-                    leagueDTO = new LeagueDTO(idLeague, league.getLeague(), owner, isOwner, isMember, "Y", userPending,
-                        memberCount, league.getDescription(), users, pendingUsers, games, events);
-                }else{
-                    leagueDTO = new LeagueDTO(idLeague, league.getLeague(), owner, isOwner, isMember, "Y", userPending,
-                        memberCount, league.getDescription(), users, new HashSet<>(), games, events);
-                }
-            }
-            return leagueDTO;
+        Set<Game> games = new HashSet<>();
+        for(GameLeague gameLeague: league.getGameLeagues()){
+            games.add(gameLeague.getGame());
         }
+
+        Set<LeagueEventDTO> events = new HashSet<>();
+        for(Event event: league.getEvents()){
+            events.add(new LeagueEventDTO(event.getIdEvent(), event.getEvent(), getLeagueEventStr(event, timeZone)));
+        }
+
+        return new LeagueDTO(league.getIdLeague(), league.getLeague(), ownerName, "N", memberCount, league.getLeague(), "OWN", userLeagueDTOs, pendingUserLeagueDTOs, games, events); 
+
     }
 
     public boolean deleteLeague(int idLeague, int idUser) {
@@ -309,9 +346,9 @@ public class LeagueService {
      * @param idMember id of the meember to remove
      * @return
      */
-    public boolean removeMember(int idOwner, int idLeague, int idMember){
-        int status = userLeagueRepository.removeMember(idLeague, idMember, idOwner);
-        return true; 
+    public boolean removeMember(int idOwner, int idLeague, Set<Integer> idMembers){
+        int status = userLeagueRepository.removeMember(idLeague, idMembers, idOwner);
+        return status == 1; 
     }
 
     /**
@@ -321,9 +358,9 @@ public class LeagueService {
      * @param idMember id of the meember to remove
      * @return
      */
-    public boolean addMember(int idOwner, int idLeague, int idMember){
-        int status = userLeagueRepository.addMember(idLeague, idMember, idOwner);
-        return true; 
+    public boolean addMember(int idOwner, int idLeague, Set<Integer> idMembers){
+        int status = userLeagueRepository.addMember(idLeague, idMembers, idOwner);
+        return status == 1; 
     }
 
     /**

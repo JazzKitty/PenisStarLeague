@@ -84,7 +84,6 @@ export class LeagueService {
         return this.http.post<any>(this.url + "editPrimaryGames", null, {headers: headers, params: params});
     }
 
-
     getOwnedLeagues(){
         let headers = new HttpHeaders({ "Authorization": "Bearer " + this.appService.tokenSub.value })
 
@@ -103,4 +102,23 @@ export class LeagueService {
         })
 
     }
+
+    addMember(idLeague: number, idMembers: number[]){
+        let headers = new HttpHeaders({ "Authorization": "Bearer " + this.appService.tokenSub.value })
+        let params = new HttpParams().set("idLeague", idLeague).set("idMembers", idMembers.join(","));
+
+        this.http.post(this.url + "addMember", null, {headers: headers, params: params}).subscribe(res =>{
+            this.getLeague(idLeague); // refresh 
+        });
+    }
+
+    removeMember(idLeague: number, idMembers: number[]){
+        let headers = new HttpHeaders({ "Authorization": "Bearer " + this.appService.tokenSub.value })
+        let params = new HttpParams().set("idLeague", idLeague).set("idMembers", idMembers.join(","));
+
+        this.http.delete(this.url + "removeMember", {headers: headers, params: params}).subscribe(res =>{
+            this.getLeague(idLeague); // refresh 
+        });
+    }
+
 }

@@ -1,7 +1,7 @@
 <main style="height: 100%; width: 100%">
-    <header class="brand-name">
-        <mat-toolbar class="green-color" style="color: white; width: 100%; border: none">
-            <mat-toolbar-row style="display: flex; width: 100%;">
+    <header style="height: 64px;">
+        <mat-toolbar class="green-color" style="color: white; width: 100%; border: none; justify-content: center;">
+            <mat-toolbar-row style="display: flex; width: 100%; height: inherit;">
                 <button style="width: 40px; height: 40px;
           font-size: large;
           border: none;
@@ -20,15 +20,9 @@
                     <h2>
                         Login In
                     </h2>
-                    <button style="width: 40px; height: 40px;
-                font-size: large;
-                border: none;
-                color: transparent;
-                background-color: transparent;
-                text-align: center;
-                text-decoration: none;
-                display: inline-block;
-                cursor: pointer;" type="button" aria-label="Toggle sidenav" class="button" (click)="onLogin()">
+                    <button style="width: 40px; height: 40px; font-size: large; border: none; color: transparent;
+                        background-color: transparent; text-align: center; text-decoration: none; display: inline-block;
+                        cursor: pointer;" type="button" aria-label="Toggle sidenav" class="button" (click)="onLogin()">
 
                         <fa-icon style="color:white;" [icon]="faSignIn"></fa-icon>
                     </button>
@@ -49,7 +43,7 @@
             </mat-toolbar-row>
         </mat-toolbar>
     </header>
-    <section class="content" style="height: inherit;">
+    <section style="height: calc(100% - 64px);">
         <mat-drawer-container style="height: 100%;">
             <mat-drawer mode="side" [opened]="isSidebarOpen">
                 <mat-nav-list>

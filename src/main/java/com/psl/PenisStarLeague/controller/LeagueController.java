@@ -143,9 +143,9 @@ public class LeagueController {
     }
 
     @PostMapping("/addMember")
-    public ResponseEntity<Void> addMember(Authentication authentication, @RequestParam Integer idLeague, @RequestParam Integer idMember) {
+    public ResponseEntity<Void> addMember(Authentication authentication, @RequestParam Integer idLeague, @RequestParam String idMembers) {
         int idOwner = userService.getIdUser(authentication); //if you are making this request you SHOULD be the owner of the league. This will be checked later...
-        boolean added = leagueService.addMember(idOwner, idLeague, idMember);
+        boolean added = leagueService.addMember(idOwner, idLeague, PSLUtil.stringToSet(idMembers, ","));
         if(added){
             return ResponseEntity.status(HttpStatus.SC_CREATED).build();
         }else{
@@ -154,9 +154,9 @@ public class LeagueController {
     }
 
     @DeleteMapping("/removeMember")
-    public ResponseEntity<Void> removeMember(Authentication authentication, @RequestParam Integer idLeague, @RequestParam Integer idMember) {
+    public ResponseEntity<Void> removeMember(Authentication authentication, @RequestParam Integer idLeague, @RequestParam String idMembers) {
         int idOwner = userService.getIdUser(authentication); //if you are making this request you SHOULD be the owner of the league. This will be checked later...
-        boolean added = leagueService.removeMember(idOwner, idLeague, idMember);
+        boolean added = leagueService.removeMember(idOwner, idLeague, PSLUtil.stringToSet(idMembers, ","));
         if(added){
             return ResponseEntity.status(HttpStatus.SC_CREATED).build();
         }else{

@@ -119,31 +119,37 @@ public class EventService {
         // Grab event and make sure user is part of league that contains that event
         List<Event> events = eventRepository.findEventsByIds(idEvents, idUser);
         String occursStr = "";
+        String interval = ""; 
 
         for (Event event : events) {
             ZonedDateTime zonedDateTime = event.getDate().atZone(id);
 
             if (event.getEventIntervalType() == null) {
                 occursStr = "Occurs on " + PSLUtil.getDateString(zonedDateTime);
+                interval = "once";
             } else {
                 switch (event.getEventIntervalType().getIntervalType()) {
                     case "Yearly":
                         occursStr = "Occurs yearly on " + PSLUtil.getYearlyString(zonedDateTime);
+                        interval = "yearly";
                         break;
                     case "Monthly":
                         occursStr = "Occurs Monthly on the " + PSLUtil.getMonthlyString(zonedDateTime);
+                        interval = "monthly";
                         break;
                     case "Weekly":
                         occursStr = "Occurs Weekly every " + PSLUtil.getWeeklyString(zonedDateTime);
+                        interval = "weekly";
                         break;
                     case "Daily":
                         occursStr = "Occurs Daily at " + PSLUtil.getTimeString(zonedDateTime.getHour(), zonedDateTime.getHour());
+                        interval = "daily";
                         break;
                 }
             }
             EventCardDTO eventCardDTO = new EventCardDTO(event.getIdEvent(), event.getEvent(),
                     event.getLeague().getIdLeague(), event.getLeague().getLeague(), occursStr,
-                    event.getGame().getGame(), event.getDescription());
+                    event.getGame().getGame(), event.getDescription(), interval);
 
             eventCardDTOs.add(eventCardDTO);
 
@@ -174,14 +180,14 @@ public class EventService {
             && (minLocalEvent.isAfter(localEventDate) || minLocalEvent.isEqual(localEventDate)) ){
 
             calenderEventDTOs.add( new CalenderEventDTO(event.getIdEvent(), event.getLeague().getIdLeague(),
-                event.getEvent(), minEventDate.toInstant()));
+                event.getEvent(), minEventDate.toInstant(), "yearly"));
         }
         if(maxLocalDate != minLocalEvent && 
             (maxLocalDate.isAfter(minDate) || maxLocalDate.isEqual(minDate)) 
                 && (maxLocalDate.isBefore(maxDate) || maxLocalDate.isEqual(maxDate))
                 && (maxLocalDate.isAfter(localEventDate) || maxLocalDate.isEqual(localEventDate))){
             calenderEventDTOs.add( new CalenderEventDTO(event.getIdEvent(), event.getLeague().getIdLeague(),
-                event.getEvent(), maxEventDate.toInstant()));
+                event.getEvent(), maxEventDate.toInstant(), "yearly"));
         }
 
     }
@@ -207,7 +213,7 @@ public class EventService {
             if ((localMonthlyDate.isAfter(localEventDate) || localMonthlyDate.isEqual(localEventDate))
                     && (localMonthlyDate.isAfter(minDate) || localMonthlyDate.isEqual(minDate))) {
                 calenderEventDTOs.add(new CalenderEventDTO(event.getIdEvent(), event.getLeague().getIdLeague(),
-                        event.getEvent(), monthlyDateTime.toInstant()));
+                        event.getEvent(), monthlyDateTime.toInstant(), "monthly"));
             }
            
             monthlyDateTime =  monthlyDateTime.plusMonths(1);
@@ -242,7 +248,7 @@ public class EventService {
             if (localEventDate.isBefore(weekDateTime.toLocalDate())
                     || localEventDate.isEqual(weekDateTime.toLocalDate())) {
                 calenderEventDTOs.add(new CalenderEventDTO(event.getIdEvent(), event.getLeague().getIdLeague(),
-                        event.getEvent(), weekDateTime.toInstant()));
+                        event.getEvent(), weekDateTime.toInstant(),"weekly"));
             }
             weekDateTime = weekDateTime.plusDays(7); // add a week
             localEventDate = eventDate.toLocalDate();
@@ -268,7 +274,7 @@ public class EventService {
             if (localEventDate.isBefore(dailyDateTime.toLocalDate())
                     || localEventDate.isEqual(dailyDateTime.toLocalDate())) {
                 calenderEventDTOs.add(new CalenderEventDTO(event.getIdEvent(), event.getLeague().getIdLeague(),
-                        event.getEvent(), dailyDateTime.toInstant()));
+                        event.getEvent(), dailyDateTime.toInstant(), "daily"));
             }
             dailyDateTime = dailyDateTime.plusDays(1); // add a week
             localEventDate = eventDate.toLocalDate();
@@ -281,7 +287,7 @@ public class EventService {
         LocalDate localEventDate = eventDate.toLocalDate();
         if (!localEventDate.isBefore(minDate) && !localEventDate.isAfter(maxDate)) {
             calenderEventDTOs.add(new CalenderEventDTO(event.getIdEvent(), event.getLeague().getIdLeague(),
-                    event.getEvent(), eventDate.toInstant()));
+                    event.getEvent(), eventDate.toInstant(),"single"));
         }
     }
 

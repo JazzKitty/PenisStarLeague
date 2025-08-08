@@ -9,6 +9,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 })
 export class EditInputDialogComponent {
     public title: string = "";
+    public label: string = "";
     public value: string | undefined = "";
     @Output() confirmed = new EventEmitter<string>();
 
@@ -21,6 +22,7 @@ export class EditInputDialogComponent {
     }
 
     onConfirm(){
+        console.log("here")
         this.confirmed.emit(this.value); 
     }
 

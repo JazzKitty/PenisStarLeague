@@ -1,12 +1,11 @@
 <div class="dialog" tabindex="-1" role="dialog">
     <h2 class="dialog-header">{{title}}</h2>
     <mat-form-field appearance="fill">
-    <mat-label>League Name</mat-label>
+    <mat-label>{{label}}</mat-label>
         <input
           matInput
-          placeholder="Ex. Vagina Star League"
           [(ngModel)]="value"
-          name="leagueName"/>
+          name="textInput"/>
     </mat-form-field>
     <div class="dialog-footer">
     <button

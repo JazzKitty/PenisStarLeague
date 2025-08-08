@@ -11,6 +11,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 export class EditTextareaDialogComponent {
     public title: string = "";
     public value: string | undefined = "";
+    public label: string = ""; 
     @Output() confirmed = new EventEmitter<string>();
 
     constructor(private dialogRef: MatDialogRef<EditTextareaDialogComponent>){

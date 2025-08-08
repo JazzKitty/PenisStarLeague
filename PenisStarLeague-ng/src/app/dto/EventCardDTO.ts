@@ -5,5 +5,5 @@ export class EventCardDTO {
     public league: string | undefined;
     public occurring: string | undefined; 
     public game: string | undefined; 
-    public description: string | undefined; 
+    public description: string | undefined;
 }
