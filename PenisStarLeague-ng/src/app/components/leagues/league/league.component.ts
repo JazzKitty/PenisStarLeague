@@ -13,6 +13,7 @@ import { BehaviorSubject } from 'rxjs';
 import { Game } from '../../../model/Game';
 import { EditAutocompleteDialog } from '../../shared/edit-autocomplete-dialog/edit-autocomplete-dialog';
 import { NewEventComponent } from '../../events/new-event-component/new-event-component';
+import { AgGridTheme } from '../../shared/ag-grid-theme';
 
 @Component({
     selector: 'app-league',
@@ -36,15 +37,7 @@ export class LeagueComponent {
     public selectedMembersToAdd: any[] | undefined = [];
     public selectedMembersToRemoved: any[] | undefined = []; 
 
-    public readonly theme = themeQuartz.withParams({
-        backgroundColor: '#4E4E4E',
-        foregroundColor: '#7EB900',
-        headerTextColor: '#FFFFFF',
-        headerBackgroundColor: '#424242',
-        oddRowBackgroundColor: '#424242',
-        headerColumnResizeHandleColor: '#7EB900',
-        cellTextColor: '#FFFFFF',
-    });
+    public readonly theme = AgGridTheme.theme;
 
     constructor(
         private leagueService: LeagueService,
@@ -76,21 +69,21 @@ export class LeagueComponent {
     setUpColDef() {
 
         this.memberColDef = [
-            { field: 'userName', flex: 1},
-            { field: 'gamerTag', flex: 1 },
-            { field: 'joinDate', flex: 1 },
-            { field: 'bio', flex: 2},
+            { field: 'userName', headerName: 'User Name', flex: 1},
+            { field: 'gamerTag', headerName: 'Gamer Tag', flex: 1 },
+            { field: 'joinDate', headerName: 'Join Date', flex: 1 },
+            { field: 'bio', headerName: 'Bio', flex: 2},
         ];
 
         this.pendingMemberColDef = [
-            { field: 'userName', flex: 1},
-            { field: 'gamerTag', flex: 1 },
-            { field: 'bio', flex: 2},
+            { field: 'userName', headerName: 'User Name', flex: 1},
+            { field: 'gamerTag', headerName: 'Gamer Tag', flex: 1 },
+            { field: 'bio', headerName: 'Bio', flex: 2},
         ];
 
         this.eventColDef = [
-            {field: 'event', flex: 1},
-            {field: 'occuring', flex: 1}
+            {field: 'event', headerName: 'Event Title', flex: 1},
+            {field: 'occuring', headerName: 'Occuring when?', flex: 1}
         ]
 
         this.gridOptions = {

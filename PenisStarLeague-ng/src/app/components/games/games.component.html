@@ -1,1 +1,11 @@
-<p>games works!</p>
+<div style="justify-content: space-between; width: 100%; height: 100%; display: flex; flex-direction: column;">
+    <h1>Games</h1>
+    <ag-grid-angular style="width: calc(100% - 10px); align-self: center; height: inherit;"
+        [rowData]="gameInfo"
+        [columnDefs]="gamesColDef"
+        [theme]="theme"
+        >
+
+    </ag-grid-angular>
+
+</div>

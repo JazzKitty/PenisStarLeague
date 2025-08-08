@@ -61,8 +61,6 @@ export class AppComponent {
     loadDictionaries(){
         this.appService.getLeagueTypes();
         this.appService.getGames(); // I guess this is a dictionary now... maybe need to refactor some names eventually 
-        this.appService.getMonthes();
-        this.appService.getWeeks();
         this.appService.getEventIntervalTypes();
     }
 

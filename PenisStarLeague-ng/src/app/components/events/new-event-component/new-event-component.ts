@@ -22,8 +22,6 @@ export class NewEventComponent {
 
     //dictionary subs 
     public gameDictSub: BehaviorSubject<Game[]>;
-    public weekDictSub: BehaviorSubject<Week[]>;
-    public monthDictSub: BehaviorSubject<Month[]>;
     public eventIntervalTypeDictSub: BehaviorSubject<EventIntervalType[]>;
     public ownedLeaguesSub: BehaviorSubject<LeagueDictDTO[]>; 
     public yesNoDict: any[] = [];
@@ -34,8 +32,6 @@ export class NewEventComponent {
 
         this.ownedLeaguesSub = leagueService.ownedLeagueSub; 
         this.gameDictSub = appService.gameSub;
-        this.weekDictSub = appService.weekSub;
-        this.monthDictSub = appService.monthSub;
         this.eventIntervalTypeDictSub = appService.eventIntervalTypeSub;
     }
 
@@ -45,7 +41,10 @@ export class NewEventComponent {
 
     saveEvent(){
         this.eventService.saveEvent(this.event)?.subscribe(res =>{
-            
+            if(this.event.idLeague){
+                this.leagueService.getLeague(this.event.idLeague)
+            }
+            this.dialogRef.close();
         })
     }
 

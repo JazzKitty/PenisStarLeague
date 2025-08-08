@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import com.psl.PenisStarLeague.dto.GameInfoDTO;
 import com.psl.PenisStarLeague.model.Game;
 import com.psl.PenisStarLeague.repo.GameRepository;
 
@@ -19,4 +21,7 @@ public class GameService {
         return gameRepository.findAll(); 
     }
 
+    public List<GameInfoDTO> getGameInfo(){
+        return gameRepository.getGameInfo();
+    }
 }

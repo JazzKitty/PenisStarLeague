@@ -23,8 +23,6 @@ export class AppService {
     public userSub: BehaviorSubject<UserDTO> = new BehaviorSubject<UserDTO>(new UserDTO());
     public leagueTypeSub: BehaviorSubject<LeagueType[]> = new BehaviorSubject<LeagueType[]>([]);
     public gameSub: BehaviorSubject<Game[]> = new BehaviorSubject<Game[]>([]);
-    public monthSub: BehaviorSubject<Month[]> = new BehaviorSubject<Month[]>([]);
-    public weekSub: BehaviorSubject<Week[]> = new BehaviorSubject<Week[]>([]);
     public eventIntervalTypeSub: BehaviorSubject<EventIntervalType[]> = new BehaviorSubject<EventIntervalType[]>([]);
 
     constructor(private http: HttpClient) {
@@ -73,19 +71,6 @@ export class AppService {
     getGames(): void{
         this.http.get<Game[]>(this.url + "public/getGames" ).subscribe(res => {
             this.gameSub.next(res)
-        })
-    }
-
-    
-    getMonthes(): void{
-        this.http.get<Month[]>(this.url + "public/getMonthes" ).subscribe(res => {
-            this.monthSub.next(res)
-        })
-    }
-
-    getWeeks(): void{
-        this.http.get<Week[]>(this.url + "public/getWeeks" ).subscribe(res => {
-            this.weekSub.next(res)
         })
     }
 

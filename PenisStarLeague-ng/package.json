@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "deploy": "ng build --prod --base-href https://jazzkitty.github.io/PenisStarLeague/ && angular-cli-ghpages",
+    "deploy": "ng build --prod --base-href https://PenisStarLeague.com && angular-cli-ghpages",
     "serve:ssr:simple": "node dist/simple/server/server.mjs"
   },
   "private": true,

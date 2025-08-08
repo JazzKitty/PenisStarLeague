@@ -22,34 +22,20 @@ import com.psl.PenisStarLeague.dto.EventCardDTO;
 import com.psl.PenisStarLeague.model.Event;
 import com.psl.PenisStarLeague.model.League;
 import com.psl.PenisStarLeague.model.dictionary.EventIntervalType;
-import com.psl.PenisStarLeague.model.dictionary.Month;
-import com.psl.PenisStarLeague.model.dictionary.Week;
 import com.psl.PenisStarLeague.repo.EventIntervalTypeRepository;
 import com.psl.PenisStarLeague.repo.EventRepository;
 import com.psl.PenisStarLeague.repo.GameRepository;
 import com.psl.PenisStarLeague.repo.LeagueRepository;
-import com.psl.PenisStarLeague.repo.MonthRepository;
-import com.psl.PenisStarLeague.repo.WeekRepository;
 import com.psl.PenisStarLeague.util.PSLUtil;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class EventService {
-    private final MonthRepository monthRepository;
-    private final WeekRepository weekRepository;
     private final EventRepository eventRepository;
     private final EventIntervalTypeRepository eventIntervalTypeRepository;
     private final LeagueRepository leagueRepository;
     private final GameRepository gameRepository;
-
-    public List<Month> getAllMonthes() {
-        return monthRepository.findAll();
-    }
-
-    public List<Week> getAllWeeks() {
-        return weekRepository.findAll();
-    }
 
     public List<EventIntervalType> getAllEventIntervalTypes() {
         return eventIntervalTypeRepository.findAll();
@@ -119,7 +105,7 @@ public class EventService {
         // Grab event and make sure user is part of league that contains that event
         List<Event> events = eventRepository.findEventsByIds(idEvents, idUser);
         String occursStr = "";
-        String interval = ""; 
+        String interval = "";
 
         for (Event event : events) {
             ZonedDateTime zonedDateTime = event.getDate().atZone(id);
@@ -142,7 +128,8 @@ public class EventService {
                         interval = "weekly";
                         break;
                     case "Daily":
-                        occursStr = "Occurs Daily at " + PSLUtil.getTimeString(zonedDateTime.getHour(), zonedDateTime.getHour());
+                        occursStr = "Occurs Daily at "
+                                + PSLUtil.getTimeString(zonedDateTime.getHour(), zonedDateTime.getHour());
                         interval = "daily";
                         break;
                 }
@@ -166,28 +153,29 @@ public class EventService {
      * @param maxDate
      * @param id
      */
-    private static void createYearlyEvents(List<CalenderEventDTO> calenderEventDTOs, Event event, LocalDate minDate, LocalDate maxDate, ZoneId id) {
+    private static void createYearlyEvents(List<CalenderEventDTO> calenderEventDTOs, Event event, LocalDate minDate,
+            LocalDate maxDate, ZoneId id) {
         ZonedDateTime eventDate = event.getDate().atZone(id);
         LocalDate localEventDate = eventDate.toLocalDate();
- 
+
         ZonedDateTime minEventDate = eventDate.withYear(minDate.getYear());
         ZonedDateTime maxEventDate = eventDate.withYear(maxDate.getYear());
         LocalDate minLocalEvent = maxEventDate.toLocalDate();
         LocalDate maxLocalDate = maxEventDate.toLocalDate();
 
-        if((minLocalEvent.isAfter(minDate) || minLocalEvent.isEqual(minDate)) 
-            && (minLocalEvent.isBefore(maxDate) || minLocalEvent.isEqual(maxDate))
-            && (minLocalEvent.isAfter(localEventDate) || minLocalEvent.isEqual(localEventDate)) ){
+        if ((minLocalEvent.isAfter(minDate) || minLocalEvent.isEqual(minDate))
+                && (minLocalEvent.isBefore(maxDate) || minLocalEvent.isEqual(maxDate))
+                && (minLocalEvent.isAfter(localEventDate) || minLocalEvent.isEqual(localEventDate))) {
 
-            calenderEventDTOs.add( new CalenderEventDTO(event.getIdEvent(), event.getLeague().getIdLeague(),
-                event.getEvent(), minEventDate.toInstant(), "yearly"));
+            calenderEventDTOs.add(new CalenderEventDTO(event.getIdEvent(), event.getLeague().getIdLeague(),
+                    event.getEvent(), minEventDate.toInstant(), "yearly"));
         }
-        if(maxLocalDate != minLocalEvent && 
-            (maxLocalDate.isAfter(minDate) || maxLocalDate.isEqual(minDate)) 
+        if (maxLocalDate != minLocalEvent &&
+                (maxLocalDate.isAfter(minDate) || maxLocalDate.isEqual(minDate))
                 && (maxLocalDate.isBefore(maxDate) || maxLocalDate.isEqual(maxDate))
-                && (maxLocalDate.isAfter(localEventDate) || maxLocalDate.isEqual(localEventDate))){
-            calenderEventDTOs.add( new CalenderEventDTO(event.getIdEvent(), event.getLeague().getIdLeague(),
-                event.getEvent(), maxEventDate.toInstant(), "yearly"));
+                && (maxLocalDate.isAfter(localEventDate) || maxLocalDate.isEqual(localEventDate))) {
+            calenderEventDTOs.add(new CalenderEventDTO(event.getIdEvent(), event.getLeague().getIdLeague(),
+                    event.getEvent(), maxEventDate.toInstant(), "yearly"));
         }
 
     }
@@ -215,8 +203,8 @@ public class EventService {
                 calenderEventDTOs.add(new CalenderEventDTO(event.getIdEvent(), event.getLeague().getIdLeague(),
                         event.getEvent(), monthlyDateTime.toInstant(), "monthly"));
             }
-           
-            monthlyDateTime =  monthlyDateTime.plusMonths(1);
+
+            monthlyDateTime = monthlyDateTime.plusMonths(1);
             localMonthlyDate = monthlyDateTime.toLocalDate();
         }
     }
@@ -230,7 +218,8 @@ public class EventService {
      * @param maxDate
      * @param id
      */
-    private static void createWeeklyEvents(List<CalenderEventDTO> calenderEventDTOs, Event event, LocalDate minDate, LocalDate maxDate, ZoneId id) {
+    private static void createWeeklyEvents(List<CalenderEventDTO> calenderEventDTOs, Event event, LocalDate minDate,
+            LocalDate maxDate, ZoneId id) {
         ZonedDateTime eventDate = event.getDate().atZone(id);
         LocalDate localEventDate = eventDate.toLocalDate();
 
@@ -241,18 +230,24 @@ public class EventService {
         } else {
             dayDiff = (eventDate.getDayOfWeek().getValue()) - minDate.getDayOfWeek().getValue();
         }
-        ZonedDateTime weekDateTime = eventDate.withMonth(minDate.getMonthValue())
-                .withDayOfMonth(minDate.getDayOfMonth() + dayDiff);
+        try {
+            ZonedDateTime weekDateTime = eventDate.withMonth(minDate.getMonthValue())
+                    .withDayOfMonth(minDate.getDayOfMonth()).plusDays(dayDiff);
 
-        while (!weekDateTime.toLocalDate().isAfter(localEventDate)) {
-            if (localEventDate.isBefore(weekDateTime.toLocalDate())
-                    || localEventDate.isEqual(weekDateTime.toLocalDate())) {
-                calenderEventDTOs.add(new CalenderEventDTO(event.getIdEvent(), event.getLeague().getIdLeague(),
-                        event.getEvent(), weekDateTime.toInstant(),"weekly"));
+  
+            while (weekDateTime.toLocalDate().isBefore(maxDate)
+                    || weekDateTime.toLocalDate().isEqual(maxDate)) {
+                if (!weekDateTime.toLocalDate().isBefore(localEventDate)) {
+                    calenderEventDTOs.add(new CalenderEventDTO(event.getIdEvent(), event.getLeague().getIdLeague(),
+                            event.getEvent(), weekDateTime.toInstant(), "weekly"));
+                }
+                weekDateTime = weekDateTime.plusDays(7); // add a week
+                localEventDate = eventDate.toLocalDate();
+
             }
-            weekDateTime = weekDateTime.plusDays(7); // add a week
-            localEventDate = eventDate.toLocalDate();
-
+        } catch (Exception e) {
+            System.out.println(e);
+            // do nothing
         }
     }
 
@@ -265,7 +260,8 @@ public class EventService {
      * @param maxDate
      * @param id
      */
-    private static void createDailyEvents(List<CalenderEventDTO> calenderEventDTOs, Event event, LocalDate minDate, LocalDate maxDate, ZoneId id) {
+    private static void createDailyEvents(List<CalenderEventDTO> calenderEventDTOs, Event event, LocalDate minDate,
+            LocalDate maxDate, ZoneId id) {
         ZonedDateTime eventDate = event.getDate().atZone(id);
         LocalDate localEventDate = eventDate.toLocalDate();
 
@@ -287,7 +283,7 @@ public class EventService {
         LocalDate localEventDate = eventDate.toLocalDate();
         if (!localEventDate.isBefore(minDate) && !localEventDate.isAfter(maxDate)) {
             calenderEventDTOs.add(new CalenderEventDTO(event.getIdEvent(), event.getLeague().getIdLeague(),
-                    event.getEvent(), eventDate.toInstant(),"single"));
+                    event.getEvent(), eventDate.toInstant(), "single"));
         }
     }
 

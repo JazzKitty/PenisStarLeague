@@ -15,8 +15,6 @@ import com.psl.PenisStarLeague.dto.CalenderEventDTO;
 import com.psl.PenisStarLeague.dto.CreateEventDTO;
 import com.psl.PenisStarLeague.dto.EventCardDTO;
 import com.psl.PenisStarLeague.model.dictionary.EventIntervalType;
-import com.psl.PenisStarLeague.model.dictionary.Month;
-import com.psl.PenisStarLeague.model.dictionary.Week;
 import com.psl.PenisStarLeague.service.EventService;
 import com.psl.PenisStarLeague.service.UserService;
 import com.psl.PenisStarLeague.util.PSLUtil;
@@ -31,16 +29,6 @@ public class EventController {
 
     private final EventService eventService; 
     private final UserService userService;
-
-    @GetMapping("/public/getMonthes")
-    public ResponseEntity<List<Month>> getMonthes() {
-        return ResponseEntity.ok(eventService.getAllMonthes());
-    }
-
-    @GetMapping("/public/getWeeks")
-    public ResponseEntity<List<Week>> getWeeks() {
-        return ResponseEntity.ok(eventService.getAllWeeks());
-    }
 
     @GetMapping("/public/getEventIntervalTypes")
     public ResponseEntity<List<EventIntervalType>> getEventIntervalTypes(){
