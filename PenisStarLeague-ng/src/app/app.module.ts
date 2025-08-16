@@ -24,7 +24,7 @@ import { EventsComponent } from './components/events/events.component';
 import { GamesComponent } from './components/games/games.component';
 import { LeaguesComponent } from './components/leagues/leagues.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { provideHttpClient } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideOAuthClient } from 'angular-oauth2-oidc';
 import { LoadingComponent } from './components/loading/loading.component';
 import { LoginDialogComponent } from './dialog/login-dialog.component';
@@ -41,7 +41,7 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatOption } from "@angular/material/core"; 
 import { MatSelectModule} from '@angular/material/select';
 import { LeagueComponent } from './components/leagues/league/league.component';
-import { AgGridAngular } from 'ag-grid-angular'; // Angular Data Grid Component
+import { AgGridAngular } from 'ag-grid-angular'; 
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { ComfirmationDialogComponent } from './components/shared/comfirmation-dialog.component/comfirmation-dialog.component';
 import { EditInputDialogComponent } from './components/shared/edit-input-dialog.component/edit-input-dialog.component';
@@ -55,7 +55,12 @@ import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import {MatTimepickerModule} from '@angular/material/timepicker'; 
 import { EventCardComponent } from './components/events/event-card-component/event-card-component'
- import {MatTabsModule} from '@angular/material/tabs'; 
+ import {MatTabsModule} from '@angular/material/tabs';
+import { PopupDialog } from './components/shared/popup-dialog/popup-dialog'; 
+ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { Loading } from './components/shared/loading/loading';
+import { HttpErrorInterceptor } from './interceptor/http-error-interceptor';
+
 // Register all Community features
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -80,6 +85,8 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     EditAutocompleteDialog,
     Profile,
     EventCardComponent,
+    PopupDialog,
+    Loading,
   ],
   imports: [
     BrowserModule,
@@ -109,6 +116,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     MatSelectModule,
     AgGridAngular,
     MatDatepickerModule,
+    MatProgressSpinnerModule,
     MatTimepickerModule,
     MatTabsModule,
     CalendarModule.forRoot({
@@ -120,7 +128,12 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     provideAnimationsAsync(),
     provideHttpClient(),
     provideOAuthClient(),
-    provideNativeDateAdapter()
+    provideNativeDateAdapter(),
+    
+    provideHttpClient(    // DI-based interceptors must be explicitly enabled.    
+        withInterceptorsFromDi(),  
+    ),
+    {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true }
   ],
   bootstrap: [AppComponent],
 })

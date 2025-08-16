@@ -1,9 +1,25 @@
 .column{
-    width: inherit; 
-    padding: 10px; 
+    width: 100%; 
+    
 }
 :host{
     height: fit-content;
-    width: inherit;
+    width: calc(100% - 20px);
     display: inherit;
+    padding: 10px;
+}
+
+.league-container {
+  display: flex;
+  flex-direction: row; 
+  width: 100%;
+  row-gap: 10px;
+  column-gap: 10px;
+  
+}
+
+@media (max-width: 768px) {
+  .league-container {
+    flex-direction: column;
+  }
 }

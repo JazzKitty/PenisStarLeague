@@ -10,6 +10,7 @@ import { Month } from './model/Month';
 import { Week } from './model/Week'
 import { EventIntervalType } from './model/EventIntervalType';
 import { environment } from './../environments/environment';
+import { LoadingService } from './components/shared/loading/loading-service';
 
 @Injectable({
     providedIn: 'root'
@@ -25,37 +26,49 @@ export class AppService {
     public gameSub: BehaviorSubject<Game[]> = new BehaviorSubject<Game[]>([]);
     public eventIntervalTypeSub: BehaviorSubject<EventIntervalType[]> = new BehaviorSubject<EventIntervalType[]>([]);
 
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpClient, private loadingService: LoadingService) {
         this.url = environment.apiUrl;
     }
 
     getAuthUrl(): void {
-        this.http.get(this.url + "auth/url").subscribe((data: any) => {
-            this.googleAuthUrl.next(data.url);
+        this.loadingService.addLoad();
+        this.http.get(this.url + "auth/url").subscribe({
+            next: (data: any) => this.googleAuthUrl.next(data.url),
+            complete: () => this.loadingService.removeLoad()
         });
+
     }
 
     getToken(code: string): void {
-        this.http.get<any>(this.url + "auth/callback?code=" + code).subscribe(res => {
-            this.tokenSub.next(res.token);
-            if (res) {
-                this.getUser();
-            }
+        this.http.get<any>(this.url + "auth/callback?code=" + code).subscribe( {
+            
+            next: res => {
+                this.tokenSub.next(res.token);
+                if (res) {
+                    this.getUser();
+                }
+            },
+            complete: () => this.loadingService.removeLoad()
+
         });
     }
 
     getUser(): void {
-        this.http.get<UserDTO>(this.url + "getUser", { headers: new HttpHeaders({ "Authorization": "Bearer " + this.tokenSub.value }) }).subscribe(res => {
-            this.isLoggedIn = true; 
-            this.userSub.next(res)
-        })
+        this.loadingService.addLoad();
+        this.http.get<UserDTO>(this.url + "getUser", { headers: new HttpHeaders({ "Authorization": "Bearer " + this.tokenSub.value }) }).subscribe({
+            next: res => {
+                this.isLoggedIn = true; 
+                this.userSub.next(res)
+            },
+            complete: () => this.loadingService.removeLoad()
+        });
     }
 
     createUserName(userName: string, gamerTag: string): Observable<CreateUserDTO> | undefined {
-        let idUser =  this.userSub.value.idUser; 
-        if(idUser == null){
+        if(!this.isLoggedIn){
             return;
         }
+
         const headers = new HttpHeaders({ "Authorization": "Bearer " + this.tokenSub.value });
         let params = new HttpParams().set("userName", userName).set("gamerTag", gamerTag);
 
@@ -63,20 +76,26 @@ export class AppService {
     }
 
     getLeagueTypes(): void{
-        this.http.get<LeagueType[]>(this.url + "public/getLeagueTypes" ).subscribe(res => {
-            this.leagueTypeSub.next(res)
+        this.loadingService.addLoad();
+        this.http.get<LeagueType[]>(this.url + "public/getLeagueTypes" ).subscribe({
+            next: res => this.leagueTypeSub.next(res),
+            complete: () => this.loadingService.removeLoad()
         })
     }
 
     getGames(): void{
-        this.http.get<Game[]>(this.url + "public/getGames" ).subscribe(res => {
-            this.gameSub.next(res)
+        this.loadingService.addLoad();
+        this.http.get<Game[]>(this.url + "public/getGames" ).subscribe({
+            next: res => this.gameSub.next(res),
+            complete: () => this.loadingService.removeLoad()
         })
     }
 
-    getEventIntervalTypes(): void{
-        this.http.get<EventIntervalType[]>(this.url + "public/getEventIntervalTypes" ).subscribe(res => {
-            this.eventIntervalTypeSub.next(res);
+    getEventIntervalTypes(): void {
+        this.loadingService.addLoad();
+        this.http.get<EventIntervalType[]>(this.url + "public/getEventIntervalTypes" ).subscribe({
+            next: res => this.eventIntervalTypeSub.next(res),
+            complete: () => this.loadingService.removeLoad()
         })
     }
 

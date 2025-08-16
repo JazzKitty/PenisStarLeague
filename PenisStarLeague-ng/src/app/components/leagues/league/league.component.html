@@ -20,11 +20,12 @@
             </ng-template>
         </div>
 
-        <div style="display: flex; flex-direction: row; width: 100%;">
+        <div class="league-container">
             <div class="column" style="flex: 1">
                 <div style="display: flex; justify-content: space-between;">
                     <div>
-                        <h1>Title: {{league?.league}}</h1>
+                        <h1>Title:</h1>
+                        <h1 [ngModel]='league?.league' ></h1>
                     </div>
                     <button *ngIf="league?.leaguePositionCode === 'OWN'" (click)="editTitle()" mat-button
                         style="width: 40px; height: 40px;">

@@ -2,10 +2,8 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { AppService } from '../../app.service';
-import { Event } from '../../model/Event';
-import { CalenderEventDTO } from '../../dto/CalenderEventDTO';
-import { EventCardDTO } from '../../dto/EventCardDTO';
 import { GameInfoDTO } from '../../dto/GameInfoDTO';
+import { LoadingService } from '../shared/loading/loading-service';
 
 @Injectable({
     providedIn: 'root'
@@ -15,15 +13,20 @@ export class GameService {
     public gameInfoSub: BehaviorSubject<GameInfoDTO[]> = new BehaviorSubject<GameInfoDTO[]>([]);
 
     constructor(private http: HttpClient,
-        private appService: AppService) {
+        private appService: AppService,
+        private loadingService: LoadingService) {
         this.url = appService.url;
     }
 
     getGameInfo(): void {
-        this.http.get<GameInfoDTO[]>(this.url + "public/getGameInfo").subscribe((data: GameInfoDTO[]) => { 
-            if(data){
-                this.gameInfoSub.next(data); 
-            } 
+        this.loadingService.addLoad();
+        this.http.get<GameInfoDTO[]>(this.url + "public/getGameInfo").subscribe({
+            next: (data: GameInfoDTO[]) => { 
+                if(data){
+                    this.gameInfoSub.next(data); 
+                } 
+            },
+            complete: () => this.loadingService.removeLoad()    
         });
     }
 }

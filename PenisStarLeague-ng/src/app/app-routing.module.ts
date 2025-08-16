@@ -16,15 +16,17 @@ export const routes: Routes = [
     {path: 'loading', component: LoadingComponent},
     {path: 'home', component: LeaguesComponent },
     {path: 'tournaments', component: TournamentsComponent },
-    {path: 'events', component: EventsComponent },
+    {path: 'events', component: EventsComponent, canActivate: [AuthGuard] },
     {path: 'leagues', component: LeaguesComponent,
         children: [{
             path: 'league',
-            component: LeagueComponent,
+            component: LeagueComponent
         }]
      },
     {path: 'games', component: GamesComponent},
-    {path: 'profile', component: Profile, canActivate: [AuthGuard]}
+    {path: 'profile', component: Profile, canActivate: [AuthGuard]},
+    {path: '', redirectTo: 'league',pathMatch: 'full'},
+
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

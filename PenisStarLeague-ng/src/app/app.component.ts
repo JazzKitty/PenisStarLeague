@@ -41,7 +41,6 @@ export class AppComponent {
         this.isSidebarOpen = !this.isSidebarOpen;
     }
 
-
     ngOnInit(): void {
         this.appService.userSub.subscribe(res =>{
             if(res.userName !== ""){

@@ -11,7 +11,6 @@ import com.psl.PenisStarLeague.model.Game;
 import com.psl.PenisStarLeague.service.GameService;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController

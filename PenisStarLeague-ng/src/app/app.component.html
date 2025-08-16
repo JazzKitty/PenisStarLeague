@@ -1,6 +1,7 @@
 <main style="height: 100%; width: 100%">
     <header style="height: 64px;">
-        <mat-toolbar class="green-color" style="color: white; width: 100%; border: none; justify-content: center;">
+        <mat-toolbar class="green-color" style="color: white; width: 100%; border: none; justify-content: center; height: inherit;   margin: 0;
+  padding: 0;">
             <mat-toolbar-row style="display: flex; width: 100%; height: inherit;">
                 <button style="width: 40px; height: 40px;
           font-size: large;
@@ -13,33 +14,27 @@
           cursor: pointer;" type="button" aria-label="Toggle sidenav" (click)="onBarsClicked()">
                     <fa-icon style="color:white;" [icon]="faBars"></fa-icon>
                 </button>
-                <h1 style="font-family: 'Source Code Pro'; margin-left: 0px;">
-                    Penis Star League
-                </h1>
-                <div *ngIf="!userName; else loggedIn" style="margin-left: auto; display: flex; align-items: center;">
-                    <h2>
-                        Login In
-                    </h2>
-                    <button style="width: 40px; height: 40px; font-size: large; border: none; color: transparent;
-                        background-color: transparent; text-align: center; text-decoration: none; display: inline-block;
-                        cursor: pointer;" type="button" aria-label="Toggle sidenav" class="button" (click)="onLogin()">
-
+                <div style="font-family: 'Source Code Pro'; margin-left: 0px; display: flex; flex-direction: column; ">
+                    <h1>
+                        Penis Star League
+                    </h1>
+                </div>
+                <div style="margin-left: auto; display: flex; align-items: center;">
+                    <button *ngIf="!userName; else loggedIn" class="login-button" type="button"
+                        aria-label="Toggle sidenav" (click)="onLogin()">
+                        <h2 style="padding: 5px;">
+                            Login In
+                        </h2>
                         <fa-icon style="color:white;" [icon]="faSignIn"></fa-icon>
                     </button>
+                    <ng-template #loggedIn>
+                        <button class="login-button">
+                            <h2 routerLink="profile">
+                                {{userName}}
+                            </h2>
+                        </button>
+                    </ng-template>
                 </div>
-                <ng-template #loggedIn>
-                    <button style="border: none;
-                                    color: transparent;
-                                    background-color: transparent;                
-                                    text-align: center;
-                                    text-decoration: none;
-                                    display: inline-block;
-                                    margin-left: auto">
-                        <h2  routerLink="profile">
-                            {{userName}}
-                        </h2>
-                    </button>
-                </ng-template>
             </mat-toolbar-row>
         </mat-toolbar>
     </header>
@@ -60,9 +55,12 @@
                         Tournaments
                     </mat-list-item>
                 </mat-nav-list>
+                <footer style="position: absolute; bottom: 0px; padding: 10px;">Inspired by The Yard Podcast</footer>
             </mat-drawer>
             <mat-drawer-content>
-                <router-outlet></router-outlet>
+                <router-outlet>
+                    <loading-overlay></loading-overlay>
+                </router-outlet>
             </mat-drawer-content>
         </mat-drawer-container>
     </section>

@@ -21,12 +21,15 @@ export class GamesComponent {
     }
 
     ngOnInit(){
-        this.gameService.getGameInfo();
         this.gameService.gameInfoSub.subscribe(res =>{
             if(res){
                 this.gameInfo = res;
             }
-        })
+        });
+
+        if(this.gameService.gameInfoSub.value == null || this.gameService.gameInfoSub.value.length === 0){
+            this.gameService.getGameInfo();
+        }
 
         this.gamesColDef = [
             { field: 'game', headerName: 'Game' ,flex: 1},

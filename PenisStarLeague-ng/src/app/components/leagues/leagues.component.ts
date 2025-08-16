@@ -56,11 +56,7 @@ export class LeaguesComponent {
     }
 
     newLeagueDisable(): boolean{
-        if(this.user?.idUser == null){
-            return true;
-        }else{
-            return false;
-        }
+        return !this.appService.isLoggedIn; 
     }
 
     cardClick(idLeague: number) {
